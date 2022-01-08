@@ -8,6 +8,6 @@ namespace Main
 
         public long CustomerID { get; set; }
 
-        public Transaction Transactions { get; set; }
+        public List<Transaction> Transactions { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Main.WebServiceAPI;
 using Main.Sql;
 
 namespace Main;
@@ -11,8 +12,8 @@ public class MainEntry
             
             var connectionString = configuration.GetConnectionString("Main");
             Console.WriteLine(connectionString);
+            WebServiceAPI.WebServiceAPI.SaveCustomerInDB(connectionString);
             
-
             DatabaseConnection.CreateTables(connectionString);
             
             Console.WriteLine("done");
