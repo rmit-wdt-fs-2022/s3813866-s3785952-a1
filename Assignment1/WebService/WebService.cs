@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
 using Main;
+using Main.Model;
+
 namespace Main.WebServiceAPI;
 
 public static class WebServiceAPI
 {
-    public static void SaveCustomerInDB(string connectionString)
+    public static void SaveCustomerInDb(string connectionString)
     {
         // // Check if any people already exist and if they do stop.
         // var personManager = new PersonManager(connectionString);
@@ -27,18 +29,21 @@ public static class WebServiceAPI
             DateFormatString = "dd/MM/yyyy hh:mm:ss tt"
         });
         
-        foreach (var person in customers)
+        foreach (var c in customers)
         {
-            foreach (var trans in person.accounts)
+            Console.WriteLine($"CustomerID of {c.CustomerId} {c.Name} {c.Address} {c.City} {c.PostCode}");
+            Console.WriteLine($"{c.Login.LoginId} {c.Login.PasswordHash}");
+            foreach (var a in c.Accounts)
             {
-                Console.WriteLine(trans.AccountNumber);
-                Console.WriteLine(trans.Transactions.Count);
-                foreach (var time in trans.Transactions)
+                Console.WriteLine($"{a.AccountNumber} {a.AccountType} {a.CustomerId}");
+
+                foreach (var t in a.Transactions)
                 {
-                    Console.WriteLine(time.TransactionTimeUtc);
+                    Console.WriteLine($"{t.Amount} {t.Comment} {t.TransactionTimeUtc}");
+                    
                 }
             }
-            
+
         }
         
             
