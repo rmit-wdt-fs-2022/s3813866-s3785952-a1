@@ -12,7 +12,7 @@ public class MainEntry
             
             var connectionString = configuration.GetConnectionString("Main");
             Console.WriteLine(connectionString);
-            WebServiceAPI.WebServiceAPI.SaveCustomerInDB(connectionString);
+            WebServiceAPI.WebServiceAPI.SaveCustomerInDb(connectionString);
             
             DatabaseConnection.CreateTables(connectionString);
             
