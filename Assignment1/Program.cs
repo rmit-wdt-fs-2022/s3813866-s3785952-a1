@@ -1,18 +1,21 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Main.Sql;
+using Main.WebService;
+
 namespace Main;
 public class MainEntry
     {
         private static void Main()
         {
              Console.WriteLine("here");
-             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+             var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
             
              //database connection test
-             var connectionString = configuration.GetConnectionString("Main");
+             var connectionStringWebApi = configuration.GetConnectionString("WebAPI");
+             var connectionStringDatabase = configuration.GetConnectionString("Database");
              //Console.WriteLine(connectionString);
-             WebServiceAPI.WebServiceAPI.SaveCustomerInDb(connectionString);
-             DatabaseConnection.CreateTables(connectionString);
+             WebServiceApi.GetCustomerFromApi(connectionStringWebApi);
+             DatabaseConnection.CreateTables(connectionStringDatabase);
             
              //Hashing verification test
              string hash1 = "YBNbEL4Lk8yMEWxiKkGBeoILHTU7WZ9n8jJSy8TNx0DAzNEFVsIVNRktiQV+I8d2";

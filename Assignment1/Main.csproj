@@ -15,7 +15,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Update="appsettings.json">
+    <None Update="app-settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Sql\CreateTables.sql">
