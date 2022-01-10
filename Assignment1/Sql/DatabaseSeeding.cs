@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+﻿/*using Microsoft.Data.SqlClient;
 using Main.Model;
 namespace Main.Sql;
 
@@ -49,4 +49,4 @@ public class DatabaseSeeding
 
         command.ExecuteNonQuery();
     }
-}
+}*/
