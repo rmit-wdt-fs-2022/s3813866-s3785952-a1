@@ -1,23 +1,29 @@
-﻿using Newtonsoft.Json;
-using Main;
-using Main.Model;
+﻿using Main.Model;
+using Newtonsoft.Json;
 
-namespace Main.WebServiceAPI;
+namespace Main.WebService;
 
-public static class WebServiceAPI
+public static class WebServiceApi
 {
-    public static void SaveCustomerInDb(string connectionString)
+    /// <summary>
+    /// This function is used to get user details from current web api
+    /// Saves it in JSON objects which then can be used to populate database
+    /// </summary>
+    /// <param name="connectionString"></param>
+    public static void GetCustomerFromApi(string connectionString)
     {
         // // Check if any people already exist and if they do stop.
         // var personManager = new PersonManager(connectionString);
         // if(personManager.People.Any())
         //     return;
-    
-        const string Url = "https://coreteaching01.csit.rmit.edu.au/~e103884/wdt/services/customers/";
+        
+        
+        
+        const string url = "https://coreteaching01.csit.rmit.edu.au/~e103884/wdt/services/customers/";
     
         // Contact webservice.
         using var client = new HttpClient();
-        var json = client.GetStringAsync(Url).Result;
+        var json = client.GetStringAsync(url).Result;
         
         Console.WriteLine(json);
     
