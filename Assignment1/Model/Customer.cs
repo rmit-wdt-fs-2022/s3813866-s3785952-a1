@@ -4,7 +4,7 @@ public class Customer
     /// <summary>
     /// Instance Variables
     /// </summary>
-    private string _customerId;
+    private int _customerId;
     private string _name;
     private string _address;
     private string _city;
@@ -25,7 +25,7 @@ public class Customer
     /// <param name="address"></param>
     /// <param name="city"></param>
     /// <param name="postCode"></param>
-    public Customer(string customerId, string name, string address, string city, string postCode, List<Account> accounts, Login login)
+    public Customer(int customerId, string name, string address, string city, string postCode, List<Account> accounts, Login login)
     {
         _customerId = customerId;
         _name = name;
@@ -39,7 +39,7 @@ public class Customer
     /// <summary>
     /// Getters and Setters for if we need to update any details for the Customer Class
     /// </summary>
-    public string? CustomerId
+    public int? CustomerId
     {
         get => _customerId;
         set => _customerId = value ?? throw new ArgumentNullException(nameof(value));

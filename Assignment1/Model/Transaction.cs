@@ -4,9 +4,9 @@ public class Transaction
         /// <summary>
         /// Instance Variables
         /// </summary>
-        private double _amount;
+        private decimal _amount;
         private string _comment;
-        private string _transactionTimeUtc;
+        private DateTime _transactionTimeUtc;
         
         /// <summary>
         /// Default Constructor
@@ -20,7 +20,7 @@ public class Transaction
         /// <param name="amount"></param>
         /// <param name="comment"></param>
         /// <param name="transactionTimeUtc"></param>
-        public Transaction(double amount, string comment, string transactionTimeUtc)
+        public Transaction(decimal amount, string comment, DateTime transactionTimeUtc)
         {
             _amount = amount;
             _comment = comment;
@@ -30,7 +30,7 @@ public class Transaction
         /// <summary>
         /// Getters and Setters for if we need to update any details for the Transaction Class
         /// </summary>
-        public double Amount
+        public decimal Amount
         {
             get => _amount;
             set => _amount = value;
@@ -42,9 +42,9 @@ public class Transaction
             set => _comment = value ?? null;
         }
     
-        public string TransactionTimeUtc
+        public DateTime TransactionTimeUtc
         {
             get => _transactionTimeUtc;
-            set => _transactionTimeUtc = value ?? throw new ArgumentNullException(nameof(value));
+            set => _transactionTimeUtc = value;
         }
     }
