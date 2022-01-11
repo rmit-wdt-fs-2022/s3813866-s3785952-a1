@@ -2,9 +2,9 @@
 {
     public class Menu
     {
-        public static void Display()
+        public static void DisplayMenu(string name)
         {
-            
+            Console.WriteLine($"--- {name} ---");
         }
     }
 }
