@@ -47,10 +47,10 @@ public class Customer
     /// <summary>
     /// Getters and Setters for if we need to update any details for the Customer Class
     /// </summary>
-    public int? CustomerId
+    public int CustomerId
     {
         get => _customerId;
-        set => _customerId = value ?? throw new ArgumentNullException(nameof(value));
+        set => _customerId = value;
     }
 
     public string? Name { get; set; }

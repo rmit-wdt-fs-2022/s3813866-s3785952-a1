@@ -20,15 +20,9 @@ public class DatabaseManager
         Customers = command.GetDataTable().Select().Select(x => new Customer
         {
             CustomerId = x.Field<int>("CustomerID"),
-            // OR
-            // PersonID = x.Field<int>(nameof(Person.PersonID)),
-            // OR
-            // PersonID = (int) x["PersonID"],
             Name = x.Field<string>("Name"),
-            // OR
-            // FirstName = (string) x["FirstName"],
-            Address = x.Field<string>("LastName"),
-            City = x.Field<string>("LastName")
+            Address = x.Field<string>("Address"),
+            City = x.Field<string>("City")
         }).ToList();
     }
     
@@ -42,9 +36,9 @@ public class DatabaseManager
             "insert into Customer (CustomerID, Name, Address, City, Postcode) values (@CustomerID, @Name, @Address, @City, @Postcode)";
         command.Parameters.AddWithValue("CustomerID", customer.CustomerId);
         command.Parameters.AddWithValue("Name", customer.Name);
-        command.Parameters.AddWithValue("Address", customer.Address);
-        command.Parameters.AddWithValue("City", customer.City);
-        command.Parameters.AddWithValue("Postcode", customer.PostCode);
+        command.Parameters.AddWithValue("Address",customer.Address != null ? customer.Address : DBNull.Value);
+        command.Parameters.AddWithValue("City", customer.City != null ? customer.City : DBNull.Value);
+        command.Parameters.AddWithValue("Postcode", customer.PostCode!= null ? customer.PostCode : DBNull.Value);
 
         command.ExecuteNonQuery();
     }
@@ -56,10 +50,11 @@ public class DatabaseManager
         
         using var command = connection.CreateCommand();
         command.CommandText =
-            "insert into Account (AccountNumber, AccountType, CustomerId) values (@AccountNumber, @AccountType, @CustomerId)";
+            "insert into Account (AccountNumber, AccountType, CustomerId, Balance) values (@AccountNumber, @AccountType, @CustomerId, @Balance)";
         command.Parameters.AddWithValue("AccountNumber", account.AccountNumber);
         command.Parameters.AddWithValue("AccountType", account.AccountType);
         command.Parameters.AddWithValue("CustomerId", account.CustomerId);
+        command.Parameters.AddWithValue("Balance", account.Balance);
 
         command.ExecuteNonQuery();
     }
@@ -71,10 +66,14 @@ public class DatabaseManager
         
         using var command = connection.CreateCommand();
         command.CommandText =
-            "insert into Account (Amount, Comment, transactionTimeUtc) values (@Amount, @Comment, @transactionTimeUtc)";
-        command.Parameters.AddWithValue("personID", transaction.Amount);
-        command.Parameters.AddWithValue("firstName", transaction.Comment);
-        command.Parameters.AddWithValue("lastName", transaction.TransactionTimeUtc);
+            "insert into [Transaction] (TransactionType, AccountNumber, DestinationAccountNumber ,Amount, Comment, transactionTimeUtc) values (@TransactionType, @AccountNumber, @DestinationAccountNumber,@Amount, @Comment, @transactionTimeUtc)";
+        
+        command.Parameters.AddWithValue("TransactionType", transaction.TransactionType);
+        command.Parameters.AddWithValue("AccountNumber", transaction.AccountNumber);
+        command.Parameters.AddWithValue("DestinationAccountNumber", transaction.DestinationAccountNumber != null ? transaction.DestinationAccountNumber : DBNull.Value);
+        command.Parameters.AddWithValue("Amount", transaction.Amount);
+        command.Parameters.AddWithValue("Comment", transaction.Comment != null ? transaction.Comment : DBNull.Value);
+        command.Parameters.AddWithValue("TransactionTimeUtc", transaction.TransactionTimeUtc);
 
         command.ExecuteNonQuery();
     }
@@ -86,9 +85,10 @@ public class DatabaseManager
         
         using var command = connection.CreateCommand();
         command.CommandText =
-            "insert into Account (LoginID, PasswordHash) values (@Amount, @Comment)";
-        command.Parameters.AddWithValue("personID", login.LoginId);
-        command.Parameters.AddWithValue("firstName", login.PasswordHash);
+            "insert into Login (LoginID, CustomerID, PasswordHash) values (@LoginID, @CustomerID, @PasswordHash)";
+        command.Parameters.AddWithValue("LoginID", login.LoginId);
+        command.Parameters.AddWithValue("CustomerID", login.CustomerId);
+        command.Parameters.AddWithValue("PasswordHash", login.PasswordHash);
         
         command.ExecuteNonQuery();
     }

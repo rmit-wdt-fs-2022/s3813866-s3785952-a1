@@ -7,6 +7,7 @@
         private int _accountNumber;
         private char _accountType;
         private int _customerId;
+        private decimal _balance;
         private List<Transaction> _transactions = new();
         
         /// <summary>
@@ -21,11 +22,12 @@
         /// <param name="accountType"></param>
         /// <param name="customerId"></param>
         /// <param name="transactions"></param>
-        public Account(int accountNumber, char accountType, int customerId, List<Transaction> transactions)
+        public Account(int accountNumber, char accountType, int customerId, decimal balance, List<Transaction> transactions)
         {
             _accountNumber = accountNumber;
             _accountType = accountType;
             _customerId = customerId;
+            _balance = balance;
             _transactions = transactions;
         }
     
@@ -48,6 +50,12 @@
         {
             get => _customerId;
             set => _customerId = value;
+        }
+        
+        public decimal? Balance
+        {
+            get => _balance;
+            set => _balance = value ?? throw new ArgumentNullException(nameof(value));
         }
     
         public List<Transaction> Transactions
