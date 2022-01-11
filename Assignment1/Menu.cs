@@ -4,7 +4,8 @@
     {
         public static void Display()
         {
-            
+            Utilities.Disclaimer();
+            Login.LoginMenu();
         }
     }
 }
