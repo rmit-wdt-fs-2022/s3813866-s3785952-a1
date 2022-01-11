@@ -5,7 +5,9 @@ public class Login
     /// Instance Variables
     /// </summary>
     private string _loginId;
+    private int _customerId;
     private string _passwordHash;
+    
     
     /// <summary>
     /// Default Constructor For Customer
@@ -30,6 +32,12 @@ public class Login
     {
         get => _loginId;
         set => _loginId = value ?? throw new ArgumentNullException(nameof(value));
+    }
+
+    public int CustomerId
+    {
+        get => _customerId;
+        set => _customerId = value;
     }
 
     public string PasswordHash
