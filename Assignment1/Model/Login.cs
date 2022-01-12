@@ -1,5 +1,4 @@
 ﻿namespace Main.Model;
-
 public class Login
 {
     /// <summary>
@@ -9,29 +8,26 @@ public class Login
     private int _customerId;
     private string _passwordHash;
     
-    
     /// <summary>
     /// Default Constructor For Customer
     /// </summary>
-    public Login()
-    {
-    }
+    public Login() { }
 
     /// <summary>
     /// Parameterized Constructor For Login Class
     /// </summary>
     /// <param name="loginId"></param>
     /// <param name="passwordHash"></param>
-    public Login(string? loginId, string? passwordHash)
+    public Login(string loginId, string passwordHash)
     {
         _loginId = loginId;
         _passwordHash = passwordHash;
     }
-
+    
     /// <summary>
     /// Getters and Setters for if we need to update any details for the Login Class
     /// </summary>
-    public string? LoginId
+    public string LoginId
     {
         get => _loginId;
         set => _loginId = value ?? throw new ArgumentNullException(nameof(value));

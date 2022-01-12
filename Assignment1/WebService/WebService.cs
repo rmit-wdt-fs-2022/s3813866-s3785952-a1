@@ -6,12 +6,7 @@ namespace Main.WebService;
 
 public static class WebService
 {
-    /// <summary>
-    /// This function is used to get user details from current web api
-    /// Saves it in JSON objects which then can be used to populate database
-    /// </summary>
-    /// <param name="connectionString"></param>
-    public static void GetCustomerFromApi(string connectionString)
+    public static void SaveCustomerInDb(string connectionString)
     {
         // Check if any people already exist and if they do stop.
         var DdManager = new DatabaseManager(connectionString);
