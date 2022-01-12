@@ -1,6 +1,6 @@
 ﻿namespace Main
 {
-    public class Menu
+    public static class Menu
     {
         public static void MainMenu(string name)
         {
@@ -30,7 +30,7 @@
             }
         }
 
-        public static void MenuOptions(int option, string name)
+        private static void MenuOptions(int option, string name)
         {
             switch (option)
             {
@@ -61,27 +61,27 @@
             }
         }
 
-        public static void Deposit()
+        private static void Deposit()
         {
         }
 
-        public static void Withdraw()
+        private static void Withdraw()
         {
         }
 
-        public static void Transfer()
+        private static void Transfer()
         {
         }
 
-        public static void MyStatement()
+        private static void MyStatement()
         {
         }
 
-        public static void Logout()
+        private static void Logout()
         {
         }
 
-        public static void Exit()
+        private static void Exit()
         {
         }
     }
