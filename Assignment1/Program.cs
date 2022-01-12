@@ -7,17 +7,18 @@ public class Program
 {
     private static void Main()
     {
-        
         var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
-            
+
+        var wb = new WebService.WebService();
+
         //database connection test
         var connectionString = configuration.GetConnectionString("Database");
         Console.WriteLine(connectionString);
         DatabaseConnection.CreateTables(connectionString);
-        WebService.WebService.SaveCustomerInDb(connectionString);
+        wb.SaveCustomerInDb(connectionString);
 
         Console.WriteLine("done");
-        
+
         /*Console.WriteLine("here");
         var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
        
@@ -75,13 +76,14 @@ public class Program
        
        Console.WriteLine("done");*/
 
-        // var p = new Program();
-        // p.Run();
+        var p = new Program();
+        p.Run();
     }
 
     public void Run()
     {
         Utilities.Disclaimer();
-        LoginMenu.LoginMenuDisplay();
+        var lm = new LoginMenu();
+        lm.LoginMenuDisplay();
     }
 }
