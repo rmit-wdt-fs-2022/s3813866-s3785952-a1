@@ -2,9 +2,9 @@
 
 namespace Main;
 
-public abstract class Login
+public abstract class LoginMenu
 {
-    public static void LoginMenu()
+    public static void LoginMenuDisplay()
     {
         var rgx = new Regex("^[0-9]{8}$");
 
