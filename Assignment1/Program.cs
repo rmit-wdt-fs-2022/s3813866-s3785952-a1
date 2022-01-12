@@ -36,7 +36,7 @@ public class Program
             Console.WriteLine(connectionString);
             DatabaseConnection.CreateTables(connectionString);
             WebService.WebService.SaveCustomerInDb(connectionString);
-            
+
 
             //Hashing verification test
             // string hash = "YBNbEL4Lk8yMEWxiKkGBeoILHTU7WZ9n8jJSy8TNx0DAzNEFVsIVNRktiQV+I8d2";

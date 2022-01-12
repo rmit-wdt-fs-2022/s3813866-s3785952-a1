@@ -6,7 +6,8 @@ namespace Main.Sql;
 public class DatabaseManager
 {
     private readonly string _connectionString;
-    
+    private const char transactionType = 'D';
+    private const char accountType = 'T';
     public List<Customer> Customers { get; }
     
     public DatabaseManager(string connectionString)
@@ -20,7 +21,7 @@ public class DatabaseManager
         Customers = command.GetDataTable().Select().Select(x => new Customer
         {
             CustomerId = x.Field<int>("CustomerID"),
-            Name = x.Field<string>("Name"),
+            Name = x.Field<string?>("Name"),
             Address = x.Field<string>("Address"),
             City = x.Field<string>("City")
         }).ToList();
@@ -92,4 +93,67 @@ public class DatabaseManager
         
         command.ExecuteNonQuery();
     }
+    
+    ///TODO: make sure to surround these methods with a try catch, if they don't find anything in the db it will throw a
+    /// System.InvalidOperationException
+    public Login GetLogin(int customerID)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        command.CommandText = "select * from Login where CustomerID = @CustomerID";
+        command.Parameters.AddWithValue("CustomerID", customerID);
+
+        var list = command.GetDataTable().Select().Select(x => new Login
+        {
+            LoginId = x.Field<string>("LoginID"),
+            CustomerId = customerID,
+            PasswordHash = x.Field<string>("PasswordHash")
+        }).ToList();
+
+        return list.First();
+    }
+
+    /// <summary>
+    /// This method will return a list of transaction from a given user, it can also
+    /// be used to keep track of how many transfers an account has made.
+    /// <param name="accountNum"></param>
+    /// </summary>
+    public List<Transaction> GetTransaction(int accountNum)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        command.CommandText = "select * from [Transaction] where AccountNumber = @AccountNumber";
+        command.Parameters.AddWithValue("AccountNumber", accountNum);
+
+         return command.GetDataTable().Select().Select(x => new Transaction
+        {
+            TransactionID = x.Field<int>("TransactionID"),
+            //Assuming the web service always return valid data, 'D' will serve as a default value
+            TransactionType = x.Field<string>("TransactionType")?.Single() ?? 'D',
+            AccountNumber = accountNum,
+            DestinationAccountNumber = x.Field<int?>("DestinationAccountNumber"),
+            Amount = x.Field<decimal>("Amount"),
+            Comment = x.Field<string?>("Comment"),
+            TransactionTimeUtc = x.Field<DateTime>("TransactionTimeUtc")
+        }).OrderByDescending(x => x.TransactionTimeUtc).ToList();
+    }
+    public List<Account> GetAccounts(int customerId)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        command.CommandText = "select * from Account where CustomerID = @CustomerID";
+        command.Parameters.AddWithValue("CustomerID", customerId);
+
+        return command.GetDataTable().Select().Select(x => new Account
+        {
+            AccountNumber = x.Field<int>("AccountNumber"),
+            //Assuming the web service always return valid data, 'T' will serve as a default value
+            AccountType = x.Field<string>("AccountType")?.Single() ?? 'S',
+            CustomerId = customerId,
+            Balance = x.Field<decimal>("Balance")
+        }).ToList();
+    }
+    
+    
+
 }
