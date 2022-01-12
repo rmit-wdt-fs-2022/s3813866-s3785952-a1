@@ -1,21 +1,26 @@
 ﻿namespace Main.Model;
+
 public class Customer
 {
+    private List<Account>? _accounts;
+
+    private string? _address;
+    private string? _city;
+
     /// <summary>
     /// Instance Variables
     /// </summary>
-    private string _customerId;
-    private string _name;
-    private string _address;
-    private string _city;
-    private string _postCode;
-    private List<Account> _accounts;
-    private Login _login;
+    private string? _customerId;
+
+    private Login? _login;
+    private string? _postCode;
 
     /// <summary>
     /// Default Constructor For Customer
     /// </summary>
-    public Customer(){ }
+    public Customer()
+    {
+    }
 
     /// <summary>
     /// Parameterized Constructor For Customer
@@ -25,17 +30,20 @@ public class Customer
     /// <param name="address"></param>
     /// <param name="city"></param>
     /// <param name="postCode"></param>
-    public Customer(string customerId, string name, string address, string city, string postCode, List<Account> accounts, Login login)
+    /// <param name="accounts"></param>
+    /// <param name="login"></param>
+    public Customer(string? customerId, string? name, string? address, string? city, string? postCode,
+        List<Account>? accounts, Login? login)
     {
         _customerId = customerId;
-        _name = name;
+        Name = name;
         _address = address;
         _city = city;
         _postCode = postCode;
         _accounts = accounts;
         _login = login;
     }
-    
+
     /// <summary>
     /// Getters and Setters for if we need to update any details for the Customer Class
     /// </summary>
@@ -45,11 +53,7 @@ public class Customer
         set => _customerId = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    public string Name
-    {
-        get => _name;
-        set => _name = value;
-    }
+    public string? Name { get; set; }
 
     public string? Address
     {
@@ -68,14 +72,14 @@ public class Customer
         get => _postCode;
         set => _postCode = value ?? null;
     }
-    
-    public List<Account> Accounts
+
+    public List<Account>? Accounts
     {
         get => _accounts;
         set => _accounts = value ?? throw new ArgumentNullException(nameof(value));
     }
-    
-    public Login Login
+
+    public Login? Login
     {
         get => _login;
         set => _login = value ?? throw new ArgumentNullException(nameof(value));
