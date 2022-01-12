@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using Main.Sql;
+﻿using Main.Sql;
 
 namespace Main;
 
@@ -10,7 +9,6 @@ public class LoginMenu
         var db = new DatabaseManager(connectionString);
         Menu m = new();
 
-        var rgx = new Regex("^[0-9]{8}$");
 
         Console.WriteLine("Welcome to Most Common Bank of Australia (MCBA) \n" +
                           "To get started enter your credentials below");
@@ -19,7 +17,7 @@ public class LoginMenu
         Console.Write("Enter Password: ");
         var password = Utilities.ReadPassword();
 
-        var loginIdEightDigitsLong = loginId != null && rgx.IsMatch(loginId);
+        var loginIdEightDigitsLong = loginId != null && Utilities.IsEightDigits(loginId);
         var details = db.GetLogin(Utilities.ConvertToInt32(loginId));
         var passwordHashMatch = Utilities.HashVerification(details.PasswordHash, password);
 
