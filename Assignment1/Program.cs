@@ -1,5 +1,4 @@
 ﻿using Main.Sql;
-using Microsoft.Extensions.Configuration;
 
 namespace Main;
 
@@ -7,12 +6,15 @@ public class Program
 {
     private static void Main()
     {
-        var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
+        Utilities util = new();
 
         var wb = new WebService.WebService();
 
+
         //database connection test
-        var connectionString = configuration.GetConnectionString("Database");
+
+        var connectionString = util.GetConnectionString();
+
         Console.WriteLine(connectionString);
         DatabaseConnection.CreateTables(connectionString);
         wb.SaveCustomerInDb(connectionString);
@@ -77,13 +79,13 @@ public class Program
        Console.WriteLine("done");*/
 
         var p = new Program();
-        p.Run();
+        p.Run(connectionString);
     }
 
-    public void Run()
+    public void Run(string connectionString)
     {
         Utilities.Disclaimer();
         var lm = new LoginMenu();
-        lm.LoginMenuDisplay();
+        lm.LoginMenuDisplay(connectionString);
     }
 }
