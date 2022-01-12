@@ -10,10 +10,6 @@ public class DatabaseManager
     private const char accountType = 'T';
     private readonly string _connectionString;
 
-    public DatabaseManager()
-    {
-    }
-
     public DatabaseManager(string connectionString)
     {
         _connectionString = connectionString;
@@ -103,22 +99,38 @@ public class DatabaseManager
 
     ///TODO: make sure to surround these methods with a try catch, if they don't find anything in the db it will throw a
     /// System.InvalidOperationException
-    public Login GetLogin(int customerId)
+    public Login GetLogin(int loginId)
     {
         using var connection = new SqlConnection(_connectionString);
         using var command = connection.CreateCommand();
-        command.CommandText = "select * from Login where CustomerID = @CustomerID";
-        command.Parameters.AddWithValue("CustomerID", customerId);
+        command.CommandText = "select * from [Login] where LoginID = @LoginID";
+        command.Parameters.AddWithValue("LoginID", loginId);
 
         var list = command.GetDataTable().Select().Select(x => new Login
         {
             LoginId = x.Field<string>("LoginID"),
-            CustomerId = customerId,
+            CustomerId = x.Field<int>("CustomerID"),
             PasswordHash = x.Field<string>("PasswordHash")
         }).ToList();
 
         return list.First();
     }
+
+    // TODO make a better method
+    // public Customer GetName(int customerId)
+    // {
+    //     using var connection = new SqlConnection(_connectionString);
+    //     using var command = connection.CreateCommand();
+    //     command.CommandText = "select  from [Customer] where CustomerID = @CustomerID";
+    //     command.Parameters.AddWithValue("CustomerID", customerId);
+    //
+    //     var list = command.GetDataTable().Select().Select(x => new Customer
+    //     {
+    //         Name = x.Field<string>("Name"),
+    //     }).ToList();
+    //
+    //     return list.First();
+    // }
 
     /// <summary>
     /// This method will return a list of transaction from a given user, it can also
