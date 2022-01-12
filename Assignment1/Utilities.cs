@@ -5,7 +5,6 @@ namespace Main;
 
 public abstract class Utilities
 {
-    
     public static bool CheckStringIsAnInt(string s)
     {
         switch (s)
@@ -22,7 +21,7 @@ public abstract class Utilities
     {
         return int.Parse(s);
     }
-    
+
     public bool HashVerification(string passwordHash, string password)
     {
         return PBKDF2.Verify(passwordHash, password);
@@ -33,6 +32,9 @@ public abstract class Utilities
         WriteColor("Disclaimer this is NOT a real bank application. \n", ("{NOT}", ConsoleColor.Red));
         Console.Write("This console based application is part of an assignment done by s3813866 and s3785952 \n" +
                       "for their first Assignment in Web Development Technologies COSC2277.");
+
+        Thread.Sleep(5000);
+        Console.Clear();
     }
 
     public static string ReadPassword(char mask = '*')
