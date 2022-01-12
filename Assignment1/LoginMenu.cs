@@ -1,10 +1,13 @@
 ﻿using System.Text.RegularExpressions;
+using Main.Sql;
 
 namespace Main;
 
-public abstract class LoginMenu
+public class LoginMenu
 {
-    public static void LoginMenuDisplay()
+    private readonly DatabaseManager db = new();
+
+    public void LoginMenuDisplay()
     {
         var rgx = new Regex("^[0-9]{8}$");
 
@@ -13,7 +16,10 @@ public abstract class LoginMenu
         Console.Write("Enter Login ID: ");
         var loginId = Console.ReadLine();
 
+
         var loginIdEightDigitsLong = rgx.IsMatch(loginId);
+
+        Console.WriteLine(db.GetLogin(Utilities.ConvertToInt32(loginId)));
 
         Console.Write("Enter Password: ");
         var password = Utilities.ReadPassword();
