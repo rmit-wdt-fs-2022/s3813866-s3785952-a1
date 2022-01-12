@@ -1,9 +1,10 @@
 ﻿using System.Text.RegularExpressions;
+using Microsoft.Extensions.Configuration;
 using SimpleHashing;
 
 namespace Main;
 
-public abstract class Utilities
+public class Utilities
 {
     public static bool CheckStringIsAnInt(string s)
     {
@@ -17,12 +18,12 @@ public abstract class Utilities
         return int.TryParse(s, out var i);
     }
 
-    public static int ConvertToInt32(string s)
+    public static int ConvertToInt32(string? s)
     {
         return int.Parse(s);
     }
 
-    public bool HashVerification(string passwordHash, string password)
+    public static bool HashVerification(string? passwordHash, string password)
     {
         return PBKDF2.Verify(passwordHash, password);
     }
@@ -33,7 +34,7 @@ public abstract class Utilities
         Console.Write("This console based application is part of an assignment done by s3813866 and s3785952 \n" +
                       "for their first Assignment in Web Development Technologies COSC2277.");
 
-        Thread.Sleep(5000);
+        // Thread.Sleep(5000);
         Console.Clear();
     }
 
@@ -92,5 +93,12 @@ public abstract class Utilities
                 Console.Write(word);
             }
         }
+    }
+
+    public string GetConnectionString()
+    {
+        var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
+        var connectionString = configuration.GetConnectionString("Database");
+        return connectionString;
     }
 }
