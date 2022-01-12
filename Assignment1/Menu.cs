@@ -1,8 +1,11 @@
 ﻿namespace Main
 {
-    public static class Menu
+    public class Menu
     {
-        public static void MainMenu(string name)
+        private readonly LoginMenu lm = new();
+        private readonly Utilities util = new();
+
+        public void MainMenu(string name)
         {
             var menuChoices = new[] {1, 2, 3, 4, 5, 6};
             var menuOptions = new[] {"Deposit", "Withdraw", "Transfer", "My Statement", "Logout", "Exit"};
@@ -30,7 +33,7 @@
             }
         }
 
-        private static void MenuOptions(int option, string name)
+        private void MenuOptions(int option, string name)
         {
             switch (option)
             {
@@ -61,28 +64,38 @@
             }
         }
 
-        private static void Deposit()
+        private void Deposit()
         {
         }
 
-        private static void Withdraw()
+        private void Withdraw()
         {
         }
 
-        private static void Transfer()
+        private void Transfer()
         {
         }
 
-        private static void MyStatement()
+        private void MyStatement()
         {
         }
 
-        private static void Logout()
+        private void Logout()
         {
+            Console.Clear();
+            Console.WriteLine("Thank you for banking with the Most Common Bank of Australia \n" +
+                              "We hope to see you back!");
+            Thread.Sleep(5000);
+            Console.Clear();
+            lm.LoginMenuDisplay(util.GetConnectionString());
         }
 
-        private static void Exit()
+        private void Exit()
         {
+            Console.Clear();
+            Console.WriteLine("Thank you for banking with the Most Common Bank of Australia \n" +
+                              "We hope to see you back!");
+            Environment.Exit(0);
         }
     }
 }
