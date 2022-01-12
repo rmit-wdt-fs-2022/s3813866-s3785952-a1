@@ -1,15 +1,15 @@
 ﻿using System.Data;
-using Microsoft.Data.SqlClient;
 using Main.Model;
+using Microsoft.Data.SqlClient;
+
 namespace Main.Sql;
 
 public class DatabaseManager
 {
-    private readonly string _connectionString;
     private const char transactionType = 'D';
     private const char accountType = 'T';
-    public List<Customer> Customers { get; }
-    
+    private readonly string _connectionString;
+
     public DatabaseManager(string connectionString)
     {
         _connectionString = connectionString;
@@ -17,7 +17,7 @@ public class DatabaseManager
         using var connection = new SqlConnection(_connectionString);
         using var command = connection.CreateCommand();
         command.CommandText = "select * from Customer";
-        
+
         Customers = command.GetDataTable().Select().Select(x => new Customer
         {
             CustomerId = x.Field<int>("CustomerID"),
@@ -26,20 +26,22 @@ public class DatabaseManager
             City = x.Field<string>("City")
         }).ToList();
     }
-    
+
+    public List<Customer> Customers { get; }
+
     public void AddCustomer(Customer customer)
     {
         using var connection = new SqlConnection(_connectionString);
         connection.Open();
-        
+
         using var command = connection.CreateCommand();
         command.CommandText =
             "insert into Customer (CustomerID, Name, Address, City, Postcode) values (@CustomerID, @Name, @Address, @City, @Postcode)";
         command.Parameters.AddWithValue("CustomerID", customer.CustomerId);
         command.Parameters.AddWithValue("Name", customer.Name);
-        command.Parameters.AddWithValue("Address",customer.Address != null ? customer.Address : DBNull.Value);
+        command.Parameters.AddWithValue("Address", customer.Address != null ? customer.Address : DBNull.Value);
         command.Parameters.AddWithValue("City", customer.City != null ? customer.City : DBNull.Value);
-        command.Parameters.AddWithValue("Postcode", customer.PostCode!= null ? customer.PostCode : DBNull.Value);
+        command.Parameters.AddWithValue("Postcode", customer.PostCode != null ? customer.PostCode : DBNull.Value);
 
         command.ExecuteNonQuery();
     }
@@ -48,7 +50,7 @@ public class DatabaseManager
     {
         using var connection = new SqlConnection(_connectionString);
         connection.Open();
-        
+
         using var command = connection.CreateCommand();
         command.CommandText =
             "insert into Account (AccountNumber, AccountType, CustomerId, Balance) values (@AccountNumber, @AccountType, @CustomerId, @Balance)";
@@ -64,14 +66,15 @@ public class DatabaseManager
     {
         using var connection = new SqlConnection(_connectionString);
         connection.Open();
-        
+
         using var command = connection.CreateCommand();
         command.CommandText =
             "insert into [Transaction] (TransactionType, AccountNumber, DestinationAccountNumber ,Amount, Comment, transactionTimeUtc) values (@TransactionType, @AccountNumber, @DestinationAccountNumber,@Amount, @Comment, @transactionTimeUtc)";
-        
+
         command.Parameters.AddWithValue("TransactionType", transaction.TransactionType);
         command.Parameters.AddWithValue("AccountNumber", transaction.AccountNumber);
-        command.Parameters.AddWithValue("DestinationAccountNumber", transaction.DestinationAccountNumber != null ? transaction.DestinationAccountNumber : DBNull.Value);
+        command.Parameters.AddWithValue("DestinationAccountNumber",
+            transaction.DestinationAccountNumber != null ? transaction.DestinationAccountNumber : DBNull.Value);
         command.Parameters.AddWithValue("Amount", transaction.Amount);
         command.Parameters.AddWithValue("Comment", transaction.Comment != null ? transaction.Comment : DBNull.Value);
         command.Parameters.AddWithValue("TransactionTimeUtc", transaction.TransactionTimeUtc);
@@ -83,30 +86,30 @@ public class DatabaseManager
     {
         using var connection = new SqlConnection(_connectionString);
         connection.Open();
-        
+
         using var command = connection.CreateCommand();
         command.CommandText =
             "insert into Login (LoginID, CustomerID, PasswordHash) values (@LoginID, @CustomerID, @PasswordHash)";
         command.Parameters.AddWithValue("LoginID", login.LoginId);
         command.Parameters.AddWithValue("CustomerID", login.CustomerId);
         command.Parameters.AddWithValue("PasswordHash", login.PasswordHash);
-        
+
         command.ExecuteNonQuery();
     }
-    
+
     ///TODO: make sure to surround these methods with a try catch, if they don't find anything in the db it will throw a
     /// System.InvalidOperationException
-    public Login GetLogin(int customerID)
+    public Login GetLogin(int loginId)
     {
         using var connection = new SqlConnection(_connectionString);
         using var command = connection.CreateCommand();
-        command.CommandText = "select * from Login where CustomerID = @CustomerID";
-        command.Parameters.AddWithValue("CustomerID", customerID);
+        command.CommandText = "select * from [Login] where LoginID = @LoginID";
+        command.Parameters.AddWithValue("LoginID", loginId);
 
         var list = command.GetDataTable().Select().Select(x => new Login
         {
             LoginId = x.Field<string>("LoginID"),
-            CustomerId = customerID,
+            CustomerId = loginId,
             PasswordHash = x.Field<string>("PasswordHash")
         }).ToList();
 
@@ -125,7 +128,7 @@ public class DatabaseManager
         command.CommandText = "select * from [Transaction] where AccountNumber = @AccountNumber";
         command.Parameters.AddWithValue("AccountNumber", accountNum);
 
-         return command.GetDataTable().Select().Select(x => new Transaction
+        return command.GetDataTable().Select().Select(x => new Transaction
         {
             TransactionID = x.Field<int>("TransactionID"),
             //Assuming the web service always return valid data, 'D' will serve as a default value
@@ -137,6 +140,7 @@ public class DatabaseManager
             TransactionTimeUtc = x.Field<DateTime>("TransactionTimeUtc")
         }).OrderByDescending(x => x.TransactionTimeUtc).ToList();
     }
+
     public List<Account> GetAccounts(int customerId)
     {
         using var connection = new SqlConnection(_connectionString);
@@ -153,7 +157,4 @@ public class DatabaseManager
             Balance = x.Field<decimal>("Balance")
         }).ToList();
     }
-    
-    
-
 }
