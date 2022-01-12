@@ -51,6 +51,12 @@ public static class WebService
             }
 
         }
+
+        Console.WriteLine(DdManager.GetLogin(2100).LoginId);
+        Console.WriteLine(DdManager.GetTransaction(4100).First().AccountNumber);
+        Console.WriteLine(DdManager.GetTransaction(4101).First().TransactionTimeUtc);
+        // Console.WriteLine(DdManager.GetTransaction(4100).First().TransactionTimeUtc);
+        Console.WriteLine(DdManager.GetAccounts(2100).First().Balance);
         
     }
 }
