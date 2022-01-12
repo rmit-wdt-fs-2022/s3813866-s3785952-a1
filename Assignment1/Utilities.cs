@@ -34,6 +34,7 @@ public class Utilities
         Console.Write("This console based application is part of an assignment done by s3813866 and s3785952 \n" +
                       "for their first Assignment in Web Development Technologies COSC2277.");
 
+        // TODO
         // Thread.Sleep(5000);
         Console.Clear();
     }
@@ -100,5 +101,10 @@ public class Utilities
         var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
         var connectionString = configuration.GetConnectionString("Database");
         return connectionString;
+    }
+
+    public static bool IsEightDigits(string str)
+    {
+        return Regex.IsMatch(str, @"^\d{8}$");
     }
 }
