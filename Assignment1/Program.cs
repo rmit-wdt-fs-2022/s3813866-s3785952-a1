@@ -4,7 +4,7 @@ namespace Main;
 
 public class Program
 {
-    private static void Main()
+    private static async Task Main()
     {
         Utilities util = new();
 
@@ -17,7 +17,7 @@ public class Program
 
         Console.WriteLine(connectionString);
         DatabaseConnection.CreateTables(connectionString);
-        wb.SaveCustomerInDb(connectionString);
+        await WebService.WebService.SaveCustomerInDbAsync(connectionString);
 
         Console.WriteLine("done");
 
