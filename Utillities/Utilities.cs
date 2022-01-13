@@ -1,7 +1,10 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using SimpleHashing;
 
-namespace Main;
+namespace Utillities;
 
 public abstract class Utilities
 {

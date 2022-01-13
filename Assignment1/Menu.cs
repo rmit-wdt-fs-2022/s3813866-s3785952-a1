@@ -1,4 +1,5 @@
-﻿namespace Main
+﻿using Utillities;
+namespace Main
 {
     public static class Menu
     {
