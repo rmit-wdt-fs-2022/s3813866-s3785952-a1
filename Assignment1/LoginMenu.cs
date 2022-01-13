@@ -1,6 +1,6 @@
-using System.Text.RegularExpressions;
 using Main.Sql;
 using Utillities;
+
 namespace Main;
 
 public class LoginMenu
@@ -11,7 +11,6 @@ public class LoginMenu
         {
             var db = new DatabaseManager(connectionString);
             Menu m = new();
-
 
             Console.WriteLine("Welcome to Most Common Bank of Australia (MCBA) \n" +
                               "To get started enter your credentials below");
@@ -37,11 +36,13 @@ public class LoginMenu
                     m.MainMenu("NAME TO DO");
                     break;
                 case false:
+                    Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Invalid LoginID and / or Password. \n" +
-                                      "Please Check Your Details And Try Again");
+                                      "Please Check Your Details And Try Again \n" +
+                                      "You will be directed back to login in 5 seconds");
                     Console.ResetColor();
-                    Thread.Sleep(1000);
+                    Thread.Sleep(5000);
                     Console.Clear();
                     continue;
             }
