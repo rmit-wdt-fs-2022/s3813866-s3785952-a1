@@ -1,35 +1,75 @@
-﻿namespace Main;
+﻿using Main.Sql;
+using Utillities;
+
+namespace Main;
 
 public class Deposit
 {
     public void DepositMenu()
     {
-        // TODO
+        try
+        {
+            var accountManager =
+                new AccountManager(StoreConnectionString.GetInstance().GetConnectionString());
+            var transactionManager =
+                new TransactionManager(StoreConnectionString.GetInstance().GetConnectionString());
+            var facade = new Facade(StoreConnectionString.GetInstance().GetConnectionString());
 
-        // show the account of the user
+            var accounts = accountManager.GetAccounts(StoreCustomerId.GetInstance().GetCustomerId());
+
+            Console.WriteLine("---------------------------------------------------\n" +
+                              "| ACCOUNT TYPE | ACCOUNT NUMBER | ACCOUNT BALANCE |\n" +
+                              "---------------------------------------------------");
+
+            foreach (var account in accounts)
+            {
+                Console.Write("  " + (account.AccountType == 'S' ? "Savings" : "Checking") + "\t ");
+                Console.Write(account.AccountNumber + "\t");
+                Console.WriteLine("\t  $" + account.Balance?.ToString("0.00"));
+            }
+
+            Console.WriteLine();
 
 
-        var accountSelected = Console.ReadLine();
+            Console.Write("Please select the account from the list above you wish to deposit to : ");
+            var selectedAccountNumber = Convert.ToInt32(Console.ReadLine());
 
-        // two ways we can do this either pass in account number of do it by the index of the list
-        // easiest in my opinion is i pass account number you cross check it with db and that the current user
-        // owns that account and we should be good.
+            var singleAccount = facade.GetUserAccounts(StoreCustomerId.GetInstance().GetCustomerId(),
+                Convert.ToInt32(selectedAccountNumber));
 
-        // i could possible make a singleton class within this project so once we login i can keep the user's customer id
-        // so all i need to pass to u is the customer id
+            if (singleAccount == null) throw new ArgumentException("Has To Be A Number");
 
-        // example you can change it 
-        // SQL SELECT accountNumber from Accounts WHERE customerid == customerid <== something like this 
-        // this method should return a list of ints so then i will then check if the accountSelected is within your list
-
-        // then make me another method that takes in accountNumberSelected and amountToBeDeposited and a comment AND accountNumber
-        // all you do is insert this into the database all those 4 and the db should update accordingly
-
-        // last method is give me the balance of the current account i give you accountNumber 
+            var accountNumberMatch = selectedAccountNumber != null &&
+                                     singleAccount.AccountNumber.ToString().Equals(selectedAccountNumber);
 
 
-        // for andrew - amount cannot be negative, to 2 decimal places if 3 decimal places invalid , comment longer than 30 will not work too
-        // minimum bal for savings is 0 and 300 for checking
-        // if user enters enter go back to menu
+            Console.WriteLine(
+                $"You have selected account number {selectedAccountNumber} with a balance of ${singleAccount.Balance?.ToString("0.00")} and a available balance of ${singleAccount.Balance}");
+
+            Console.Write("Enter the amount you wish to deposit: ");
+            var amountToDeposit = Convert.ToDouble(Console.ReadLine());
+
+            Console.Write("Enter comment for this deposit (n to quit, max length is 30): ");
+            var comment = Console.ReadLine();
+
+            if (Utilities.IsLong(comment) || comment.Equals("n"))
+                throw new ArgumentException("Max Lenght of 30 has been reached!");
+
+            facade.Deposit(selectedAccountNumber, (int) amountToDeposit, comment,
+                Convert.ToDecimal(singleAccount.Balance?.ToString("0.00")) + (decimal) amountToDeposit);
+
+            Console.WriteLine(
+                $"We have deposited ${amountToDeposit} to account number {selectedAccountNumber} successfully.");
+            Console.WriteLine("Funds should appear within the account soon.");
+            Console.WriteLine(
+                $"Your account balance is now ${Convert.ToDecimal(singleAccount.Balance?.ToString("0.00")) + (decimal) amountToDeposit}");
+        }
+        catch (Exception)
+        {
+            Console.Clear();
+            Console.WriteLine("Please Try Again As You Have Miss Typed A Word");
+            Thread.Sleep(2000);
+            DepositMenu();
+        }
     }
 }
