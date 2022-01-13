@@ -78,7 +78,7 @@ public class Utilities
         return new string(pass.Reverse().ToArray());
     }
 
-    private static void WriteColor(string str, params (string substring, ConsoleColor color)[] colors)
+    public static void WriteColor(string str, params (string substring, ConsoleColor color)[] colors)
     {
         var words = Regex.Split(str, @"( )");
 
@@ -98,7 +98,13 @@ public class Utilities
         }
     }
 
-    
+    public static void WriteColoured(string text, ConsoleColor colour)
+    {
+        Console.ForegroundColor = colour;
+        Console.WriteLine(text);
+        Console.ResetColor();
+    }
+
 
     public static bool IsEightDigits(string str)
     {

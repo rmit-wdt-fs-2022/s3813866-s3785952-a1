@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Utillities;
+
 namespace Main
 {
     public class Menu
@@ -97,9 +98,10 @@ namespace Main
             Console.Clear();
             Console.WriteLine("Thank you for banking with the Most Common Bank of Australia \n" +
                               "We hope to see you back!");
+            Utilities.WriteColoured("Program ending...", ConsoleColor.Red);
             Environment.Exit(0);
         }
-        
+
         private string GetConnectionString()
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
