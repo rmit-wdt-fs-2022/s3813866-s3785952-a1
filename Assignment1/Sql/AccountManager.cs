@@ -64,22 +64,30 @@ public class AccountManager : IManager<Account>
 
     public Account GetAccount(int customerId, int accountNumber)
     {
-        using var connection = new SqlConnection(_connectionString);
-        using var command = connection.CreateCommand();
-        command.CommandText = "SELECT * FROM Account WHERE CustomerID = @CustomerID AND AccountNumber = @AccountNumber";
-        command.Parameters.AddWithValue("CustomerID", customerId);
-        command.Parameters.AddWithValue("AccountNumber", accountNumber);
-
-        var account = command.GetDataTable().Select().Select(x => new Account
+        try
         {
-            AccountNumber = x.Field<int>("AccountNumber"),
-            //Assuming the web service always return valid data, 'T' will serve as a default value
-            AccountType = x.Field<string>("AccountType")?.Single() ?? 'S',
-            CustomerId = customerId,
-            Balance = x.Field<decimal>("Balance")
-        }).ToList();
+            using var connection = new SqlConnection(_connectionString);
+            using var command = connection.CreateCommand();
+            command.CommandText =
+                "SELECT * FROM Account WHERE CustomerID = @CustomerID AND AccountNumber = @AccountNumber";
+            command.Parameters.AddWithValue("CustomerID", customerId);
+            command.Parameters.AddWithValue("AccountNumber", accountNumber);
 
-        return account.First();
+            var account = command.GetDataTable().Select().Select(x => new Account
+            {
+                AccountNumber = x.Field<int>("AccountNumber"),
+                //Assuming the web service always return valid data, 'T' will serve as a default value
+                AccountType = x.Field<string>("AccountType")?.Single() ?? 'S',
+                CustomerId = customerId,
+                Balance = x.Field<decimal>("Balance")
+            }).ToList();
+
+            return account.First();
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 
     public void UpdateBalance(int accountNum, decimal newBalance)
