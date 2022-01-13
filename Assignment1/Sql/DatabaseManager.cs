@@ -101,20 +101,42 @@ public class DatabaseManager
     /// System.InvalidOperationException
     public Login GetLogin(int loginId)
     {
-        using var connection = new SqlConnection(_connectionString);
-        using var command = connection.CreateCommand();
-        command.CommandText = "select * from [Login] where LoginID = @LoginID";
-        command.Parameters.AddWithValue("LoginID", loginId);
-
-        var list = command.GetDataTable().Select().Select(x => new Login
+        try
         {
-            LoginId = x.Field<string>("LoginID"),
-            CustomerId = loginId,
-            PasswordHash = x.Field<string>("PasswordHash")
-        }).ToList();
+            using var connection = new SqlConnection(_connectionString);
+            using var command = connection.CreateCommand();
+            command.CommandText = "select * from [Login] where LoginID = @LoginID";
+            command.Parameters.AddWithValue("LoginID", loginId);
 
-        return list.First();
+            var list = command.GetDataTable().Select().Select(x => new Login
+            {
+                LoginId = x.Field<string>("LoginID"),
+                CustomerId = x.Field<int>("CustomerID"),
+                PasswordHash = x.Field<string>("PasswordHash")
+            }).ToList();
+            return list.First();
+        }
+        catch (InvalidOperationException exception)
+        {
+            return null;
+        }
     }
+
+    // TODO make a better method
+    // public Customer GetName(int customerId)
+    // {
+    //     using var connection = new SqlConnection(_connectionString);
+    //     using var command = connection.CreateCommand();
+    //     command.CommandText = "select  from [Customer] where CustomerID = @CustomerID";
+    //     command.Parameters.AddWithValue("CustomerID", customerId);
+    //
+    //     var list = command.GetDataTable().Select().Select(x => new Customer
+    //     {
+    //         Name = x.Field<string>("Name"),
+    //     }).ToList();
+    //
+    //     return list.First();
+    // }
 
     /// <summary>
     /// This method will return a list of transaction from a given user, it can also

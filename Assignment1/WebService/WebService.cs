@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
-using Main.Model;
+﻿using Main.Model;
 using Main.Sql;
+using Newtonsoft.Json;
 
 namespace Main.WebService;
 
-public static class WebService
+public class WebService
 {
-    public static void SaveCustomerInDb(string connectionString)
+    public void SaveCustomerInDb(string connectionString)
     {
         // Check if any people already exist and if they do stop.
         var DdManager = new DatabaseManager(connectionString);
@@ -23,7 +23,7 @@ public static class WebService
         {
             DateFormatString = "dd/MM/yyyy hh:mm:ss tt"
         });
-        
+
         foreach (var customer in customers)
         {
             DdManager.AddCustomer(customer);
@@ -31,7 +31,6 @@ public static class WebService
             DdManager.AddLogin(customer.Login);
             foreach (var account in customer.Accounts)
             {
-
                 decimal totalB = 0;
                 foreach (var transaction in account.Transactions)
                 {
@@ -40,16 +39,14 @@ public static class WebService
 
                 account.Balance = totalB;
                 DdManager.AddAccount(account);
-                
+
                 foreach (var transaction in account.Transactions)
                 {
                     transaction.TransactionType = 'D';
                     transaction.AccountNumber = account.AccountNumber;
                     DdManager.AddTransaction(transaction);
-
                 }
             }
-
         }
 
         Console.WriteLine(DdManager.GetLogin(2100).LoginId);
@@ -57,6 +54,5 @@ public static class WebService
         Console.WriteLine(DdManager.GetTransaction(4101).First().TransactionTimeUtc);
         // Console.WriteLine(DdManager.GetTransaction(4100).First().TransactionTimeUtc);
         Console.WriteLine(DdManager.GetAccounts(2100).First().Balance);
-        
     }
 }
