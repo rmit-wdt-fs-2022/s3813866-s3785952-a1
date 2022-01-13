@@ -8,33 +8,35 @@ public class Program
 {
     private static async Task Main()
     {
-        Utilities util = new();
+        // Utilities util = new();
+        //
+        // var wb = new WebService.WebService();
+        //
+        //
+        // //database connection test
+        //
+        // var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
+        // var connectionString = configuration.GetConnectionString("Database");
+        //
+        // Console.WriteLine(connectionString);
+        // DatabaseConnection.CreateTables(connectionString);
+        // await WebService.WebService.SaveCustomerInDbAsync(connectionString);
+        //
+        // Console.WriteLine("done");
 
-        var wb = new WebService.WebService();
 
+        var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
 
         //database connection test
-        
-        var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
         var connectionString = configuration.GetConnectionString("Database");
-        
-        Console.WriteLine(connectionString);
         DatabaseConnection.CreateTables(connectionString);
-        await WebService.WebService.SaveCustomerInDbAsync(connectionString);
+        WebService.WebService.SaveCustomerInDb(connectionString);
+
+        var facade = new Facade(connectionString);
+        facade.Deposit(4100, 20, "he", 10);
 
         Console.WriteLine("done");
 
-        
-        // var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
-        //     
-        // //database connection test
-        // var connectionString = configuration.GetConnectionString("Database");
-        // Console.WriteLine(connectionString);
-        // DatabaseConnection.CreateTables(connectionString);
-        // WebService.WebService.SaveCustomerInDb(connectionString);
-        //
-        // Console.WriteLine("done");
-        
         /*Console.WriteLine("here");
         var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
        
@@ -96,7 +98,7 @@ public class Program
         p.Run(connectionString);
     }
 
-    public void Run(string connectionString)
+    public void Run(string? connectionString)
     {
         Utilities.Disclaimer();
         var lm = new LoginMenu();

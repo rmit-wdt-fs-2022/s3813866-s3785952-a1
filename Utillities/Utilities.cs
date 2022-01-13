@@ -110,4 +110,16 @@ public class Utilities
     {
         return Regex.IsMatch(str, @"^\d{8}$");
     }
+
+    public static double GetRidOfDecimals(double number)
+    {
+        return Math.Round(number, 0);
+    }
+
+    public static bool IsLong(string str)
+    {
+        if (str.Length > 30)
+            return true;
+        return false;
+    }
 }

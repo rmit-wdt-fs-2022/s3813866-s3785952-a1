@@ -5,11 +5,11 @@ namespace Main;
 
 public class LoginMenu
 {
-    public void LoginMenuDisplay(string connectionString)
+    public void LoginMenuDisplay(string? connectionString)
     {
         while (true)
         {
-            var db = new DatabaseManager(connectionString);
+            var loginManager = new LoginManager(connectionString);
             Menu m = new();
 
             Console.WriteLine("Welcome to Most Common Bank of Australia (MCBA) \n" +
@@ -24,11 +24,13 @@ public class LoginMenu
             var passwordHashMatch = false;
             if (loginIdEightDigitsLong)
             {
-                var details = db.GetLogin(Utilities.ConvertToInt32(loginId));
+                var details = loginManager.GetLogin(Utilities.ConvertToInt32(loginId));
                 passwordHashMatch = Utilities.HashVerification(details.PasswordHash, password);
+                StoreCustomerId.GetInstance()?.SetCustomerId(details.CustomerId);
             }
 
             var validLoginDetails = passwordHashMatch && loginIdEightDigitsLong;
+
 
             switch (validLoginDetails)
             {

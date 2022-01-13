@@ -20,13 +20,11 @@ public class Transaction
         /// <summary>
         /// Parameterized Constructor for Transaction Class
         /// </summary>
-        /// <param name="transactionId"></param>
         /// <param name="amount"></param>
         /// <param name="comment"></param>
         /// <param name="transactionTimeUtc"></param>
-        public Transaction(int transactionId, char transactionType, int accountNumber, int DestinationAccountNumber, decimal amount, string comment, DateTime transactionTimeUtc)
+        public Transaction(char transactionType, int accountNumber, int DestinationAccountNumber, decimal amount, string comment, DateTime transactionTimeUtc)
         {
-            _transactionId = transactionId;
             _transactionType = transactionType;
             _accountNumber = accountNumber;
             _destinationAccountNumber = DestinationAccountNumber;
