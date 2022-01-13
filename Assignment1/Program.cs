@@ -24,9 +24,9 @@ public class Program
         //
         // Console.WriteLine("done");
 
-        
+
         var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
-            
+
         //database connection test
         var connectionString = configuration.GetConnectionString("Database");
         DatabaseConnection.CreateTables(connectionString);
@@ -34,9 +34,9 @@ public class Program
 
         var facade = new Facade(connectionString);
         facade.Deposit(4100, 20, "he", 10);
-        
+
         Console.WriteLine("done");
-        
+
         /*Console.WriteLine("here");
         var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
        
@@ -94,11 +94,11 @@ public class Program
        
        Console.WriteLine("done");*/
 
-        // var p = new Program();
-        // p.Run(connectionString);
+        var p = new Program();
+        p.Run(connectionString);
     }
 
-    public void Run(string connectionString)
+    public void Run(string? connectionString)
     {
         Utilities.Disclaimer();
         var lm = new LoginMenu();
