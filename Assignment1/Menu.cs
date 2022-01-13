@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Utillities;
+
 namespace Main
 {
     public class Menu
@@ -9,6 +10,8 @@ namespace Main
 
         public void MainMenu(string name)
         {
+            StoreConnectionString.GetInstance()?.SetConnectionString(GetConnectionString());
+
             var menuChoices = new[] {1, 2, 3, 4, 5, 6};
             var menuOptions = new[] {"Deposit", "Withdraw", "Transfer", "My Statement", "Logout", "Exit"};
             Console.Clear();
@@ -68,6 +71,8 @@ namespace Main
 
         private void Deposit()
         {
+            var dp = new Deposit();
+            dp.DepositMenu();
         }
 
         private void Withdraw()
@@ -80,6 +85,8 @@ namespace Main
 
         private void MyStatement()
         {
+            var ms = new MyStatement();
+            ms.MyStatementMenu();
         }
 
         private void Logout()
@@ -99,11 +106,12 @@ namespace Main
                               "We hope to see you back!");
             Environment.Exit(0);
         }
-        
-        private string GetConnectionString()
+
+        private string? GetConnectionString()
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
             var connectionString = configuration.GetConnectionString("Database");
+
             return connectionString;
         }
     }
