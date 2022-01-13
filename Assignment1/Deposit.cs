@@ -6,7 +6,8 @@ public class Deposit
     {
         // TODO
 
-        // show the current users account
+        // show the account of the user
+
 
         var accountSelected = Console.ReadLine();
 
@@ -25,5 +26,10 @@ public class Deposit
         // all you do is insert this into the database all those 4 and the db should update accordingly
 
         // last method is give me the balance of the current account i give you accountNumber 
+
+
+        // for andrew - amount cannot be negative, to 2 decimal places if 3 decimal places invalid , comment longer than 30 will not work too
+        // minimum bal for savings is 0 and 300 for checking
+        // if user enters enter go back to menu
     }
 }
