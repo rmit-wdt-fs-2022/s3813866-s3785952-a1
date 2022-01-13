@@ -13,8 +13,8 @@ public class Transfer
         // this is for transfer
         // i give you currentaccount, destinationAccount, amount and comment and how many withdraw and and transfers they
         // have done and you will calculate the db accordingly (like withdraw)
-
-
+        
+        //hotfix
         // last method is give me the balance of the current accountnumber i give you
 
         //
