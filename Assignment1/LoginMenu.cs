@@ -1,11 +1,11 @@
-using System.Text.RegularExpressions;
 using Main.Sql;
 using Utillities;
+
 namespace Main;
 
 public class LoginMenu
 {
-    public void LoginMenuDisplay(string connectionString)
+    public void LoginMenuDisplay(string? connectionString)
     {
         while (true)
         {
@@ -27,9 +27,11 @@ public class LoginMenu
             {
                 var details = loginManager.GetLogin(Utilities.ConvertToInt32(loginId));
                 passwordHashMatch = Utilities.HashVerification(details.PasswordHash, password);
+                StoreCustomerId.GetInstance()?.SetCustomerId(details.CustomerId);
             }
 
             var validLoginDetails = passwordHashMatch && loginIdEightDigitsLong;
+
 
             switch (validLoginDetails)
             {
