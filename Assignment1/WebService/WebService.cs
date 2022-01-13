@@ -1,12 +1,13 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using Newtonsoft.Json;
 using Main.Model;
 using Main.Sql;
 using JsonException = Newtonsoft.Json.JsonException;
 
+
 namespace Main.WebService;
 
-public static class WebService
+public class WebService
 {
     private const string Url = "https://coreteaching01.csit.rmit.edu.au/~e103884/wdt/services/customers/";
 
@@ -40,7 +41,6 @@ public static class WebService
                 DbManager.AddLogin(customer.Login);
                 foreach (var account in customer.Accounts)
                 {
-
                     decimal totalB = 0;
                     foreach (var transaction in account.Transactions)
                     {

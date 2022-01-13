@@ -1,5 +1,4 @@
 ﻿using Main.Sql;
-using Microsoft.Extensions.Configuration;
 
 namespace Main;
 
@@ -7,17 +6,21 @@ public class Program
 {
     private static async Task Main()
     {
-        
-        var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
-            
+        Utilities util = new();
+
+        var wb = new WebService.WebService();
+
+
         //database connection test
-        var connectionString = configuration.GetConnectionString("Database");
+
+        var connectionString = util.GetConnectionString();
+
         Console.WriteLine(connectionString);
         DatabaseConnection.CreateTables(connectionString);
         await WebService.WebService.SaveCustomerInDbAsync(connectionString);
 
         Console.WriteLine("done");
-        
+
         /*Console.WriteLine("here");
         var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
        
@@ -75,13 +78,14 @@ public class Program
        
        Console.WriteLine("done");*/
 
-        // var p = new Program();
-        // p.Run();
+        var p = new Program();
+        p.Run(connectionString);
     }
 
-    public void Run()
+    public void Run(string connectionString)
     {
         Utilities.Disclaimer();
-        LoginMenu.LoginMenuDisplay();
+        var lm = new LoginMenu();
+        lm.LoginMenuDisplay(connectionString);
     }
 }
