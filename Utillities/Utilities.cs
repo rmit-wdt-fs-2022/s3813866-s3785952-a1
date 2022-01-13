@@ -1,8 +1,10 @@
-﻿using System.Text.RegularExpressions;
-using Microsoft.Extensions.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using SimpleHashing;
 
-namespace Main;
+namespace Utillities;
 
 public class Utilities
 {
@@ -96,12 +98,7 @@ public class Utilities
         }
     }
 
-    public string GetConnectionString()
-    {
-        var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
-        var connectionString = configuration.GetConnectionString("Database");
-        return connectionString;
-    }
+    
 
     public static bool IsEightDigits(string str)
     {
