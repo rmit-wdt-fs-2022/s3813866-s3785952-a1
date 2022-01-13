@@ -114,7 +114,6 @@ public class DatabaseManager
                 CustomerId = x.Field<int>("CustomerID"),
                 PasswordHash = x.Field<string>("PasswordHash")
             }).ToList();
-
             return list.First();
         }
         catch (InvalidOperationException exception)
