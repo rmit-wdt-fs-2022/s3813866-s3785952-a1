@@ -5,7 +5,7 @@ namespace Main;
 
 public class Program
 {
-    private static void Main()
+    private static async Task Main()
     {
         
         var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
@@ -14,7 +14,7 @@ public class Program
         var connectionString = configuration.GetConnectionString("Database");
         Console.WriteLine(connectionString);
         DatabaseConnection.CreateTables(connectionString);
-        WebService.WebService.SaveCustomerInDb(connectionString);
+        await WebService.WebService.SaveCustomerInDbAsync(connectionString);
 
         Console.WriteLine("done");
         

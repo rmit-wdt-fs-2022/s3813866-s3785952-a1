@@ -1,62 +1,80 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
+using Newtonsoft.Json;
 using Main.Model;
 using Main.Sql;
+using JsonException = Newtonsoft.Json.JsonException;
 
 namespace Main.WebService;
 
 public static class WebService
 {
-    public static void SaveCustomerInDb(string connectionString)
+    private const string Url = "https://coreteaching01.csit.rmit.edu.au/~e103884/wdt/services/customers/";
+
+    
+    public static async Task SaveCustomerInDbAsync(string connectionString)
     {
-        // Check if any people already exist and if they do stop.
-        var DdManager = new DatabaseManager(connectionString);
-        if (DdManager.Customers.Any())
-            return;
-
-        const string Url = "https://coreteaching01.csit.rmit.edu.au/~e103884/wdt/services/customers/";
-
-        // Contact webservice.
-        using var client = new HttpClient();
-        var json = client.GetStringAsync(Url).Result;
-        // Convert JSON into objects.
-        var customers = JsonConvert.DeserializeObject<List<Customer>>(json, new JsonSerializerSettings
+        try
         {
-            DateFormatString = "dd/MM/yyyy hh:mm:ss tt"
-        });
-        
-        foreach (var customer in customers)
-        {
-            DdManager.AddCustomer(customer);
-            customer.Login.CustomerId = customer.CustomerId;
-            DdManager.AddLogin(customer.Login);
-            foreach (var account in customer.Accounts)
+            // Check if any people already exist and if they do stop.
+            var DbManager = new DatabaseManager(connectionString);
+            if (DbManager.Customers.Any())
+                return;
+
+
+            // Contact webservice.
+            using var client = new HttpClient();
+            var json = await client.GetStringAsync(Url);
+
+            Console.WriteLine("here");
+            Console.WriteLine(json);
+            // Convert JSON into objects.
+            var customers = JsonConvert.DeserializeObject<List<Customer>>(json, new JsonSerializerSettings
             {
+                DateFormatString = "dd/MM/yyyy hh:mm:ss tt"
+            }) ?? throw new JsonException("Json Object Deserialize error");
 
-                decimal totalB = 0;
-                foreach (var transaction in account.Transactions)
+            foreach (var customer in customers)
+            {
+                DbManager.AddCustomer(customer);
+                customer.Login.CustomerId = customer.CustomerId;
+                DbManager.AddLogin(customer.Login);
+                foreach (var account in customer.Accounts)
                 {
-                    totalB += transaction.Amount;
+
+                    decimal totalB = 0;
+                    foreach (var transaction in account.Transactions)
+                    {
+                        totalB += transaction.Amount;
+                    }
+
+                    account.Balance = totalB;
+                    DbManager.AddAccount(account);
+
+                    foreach (var transaction in account.Transactions)
+                    {
+                        transaction.TransactionType = 'D';
+                        transaction.AccountNumber = account.AccountNumber;
+                        DbManager.AddTransaction(transaction);
+
+                    }
                 }
 
-                account.Balance = totalB;
-                DdManager.AddAccount(account);
-                
-                foreach (var transaction in account.Transactions)
-                {
-                    transaction.TransactionType = 'D';
-                    transaction.AccountNumber = account.AccountNumber;
-                    DdManager.AddTransaction(transaction);
-
-                }
             }
 
-        }
+            Console.WriteLine(DbManager.GetLogin(17963428).PasswordHash);
+            Console.WriteLine(DbManager.GetTransaction(4100).First().AccountNumber);
+            Console.WriteLine(DbManager.GetTransaction(4101).First().TransactionTimeUtc);
+            // Console.WriteLine(DdManager.GetTransaction(4100).First().TransactionTimeUtc);
+            Console.WriteLine(DbManager.GetAccounts(2100).First().Balance);
 
-        Console.WriteLine(DdManager.GetLogin(2100).LoginId);
-        Console.WriteLine(DdManager.GetTransaction(4100).First().AccountNumber);
-        Console.WriteLine(DdManager.GetTransaction(4101).First().TransactionTimeUtc);
-        // Console.WriteLine(DdManager.GetTransaction(4100).First().TransactionTimeUtc);
-        Console.WriteLine(DdManager.GetAccounts(2100).First().Balance);
-        
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        catch (JsonException e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
 }
