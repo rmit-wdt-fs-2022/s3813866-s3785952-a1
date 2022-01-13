@@ -20,7 +20,7 @@ public class Utilities
 
     public static int ConvertToInt32(string? s)
     {
-        return int.Parse(s);
+        return s.Equals(null) ? 0 : int.Parse(s);
     }
 
     public static bool HashVerification(string? passwordHash, string password)
