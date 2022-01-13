@@ -6,7 +6,9 @@ namespace Main.Sql;
 
 public class TransactionManager : IManager<Transaction>
 {
-    private const char transactionType = 'D';
+    private const char transactionTypeDeposit = 'D';
+    private const char transactionTypeWithdraw = 'W';
+    private const char transactionTypeTransfer = 'T';
     private readonly string _connectionString;
 
     public TransactionManager(string connectionString)
@@ -44,7 +46,7 @@ public class TransactionManager : IManager<Transaction>
         {
             TransactionID = x.Field<int>("TransactionID"),
             //Assuming the web service always return valid data, 'D' will serve as a default value
-            TransactionType = x.Field<string>("TransactionType")?.Single() ?? transactionType,
+            TransactionType = x.Field<string>("TransactionType")?.Single() ?? transactionTypeDeposit,
             AccountNumber = x.Field<int>("AccountNumber"),
             DestinationAccountNumber = x.Field<int?>("DestinationAccountNumber"),
             Amount = x.Field<decimal>("Amount"),
@@ -53,26 +55,47 @@ public class TransactionManager : IManager<Transaction>
         }).OrderByDescending(x => x.TransactionTimeUtc).ToList();
     }
 
-    //TODO fix this bug
-    public List<Transaction> GetNonDepositTransactions(int accountNum)
+    
+    public List<Transaction> GetWithdrawTransactions(int accountNum)
     {
         using var connection = new SqlConnection(_connectionString);
         using var command = connection.CreateCommand();
-        command.CommandText = "select * from [Transaction] where AccountNumber = @AccountNumber and TransactionType != @AccountType";
+        command.CommandText = "SELECT * FROM [Transaction] WHERE TransactionType = @AccountType AND accountnumber = @AccountNumber";
         command.Parameters.AddWithValue("AccountNumber", accountNum);
-        command.Parameters.AddWithValue("AccountType", transactionType);
+        command.Parameters.AddWithValue("AccountType", transactionTypeWithdraw);
         
         return command.GetDataTable().Select().Select(x => new Transaction
         {
             TransactionID = x.Field<int>("TransactionID"),
             //Assuming the web service always return valid data, 'D' will serve as a default value
-            TransactionType = x.Field<string>("TransactionType")?.Single() ?? transactionType,
+            TransactionType = x.Field<string>("TransactionType")?.Single() ?? transactionTypeDeposit,
             AccountNumber = accountNum,
             DestinationAccountNumber = x.Field<int?>("DestinationAccountNumber"),
             Amount = x.Field<decimal>("Amount"),
             Comment = x.Field<string?>("Comment"),
             TransactionTimeUtc = x.Field<DateTime>("TransactionTimeUtc")
-        }).OrderByDescending(x => x.TransactionTimeUtc).ToList();
+        }).ToList();
+    }
+    
+    public List<Transaction> GetTransferTransactions(int accountNum)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT * FROM [Transaction] WHERE TransactionType = @AccountType AND DestinationAccountNumber != null AND accountnumber = @AccountNumber";
+        command.Parameters.AddWithValue("AccountNumber", accountNum);
+        command.Parameters.AddWithValue("AccountType", transactionTypeTransfer);
+        
+        return command.GetDataTable().Select().Select(x => new Transaction
+        {
+            TransactionID = x.Field<int>("TransactionID"),
+            //Assuming the web service always return valid data, 'D' will serve as a default value
+            TransactionType = x.Field<string>("TransactionType")?.Single() ?? transactionTypeDeposit,
+            AccountNumber = accountNum,
+            DestinationAccountNumber = x.Field<int?>("DestinationAccountNumber"),
+            Amount = x.Field<decimal>("Amount"),
+            Comment = x.Field<string?>("Comment"),
+            TransactionTimeUtc = x.Field<DateTime>("TransactionTimeUtc")
+        }).ToList();
     }
     
     /// <summary>
@@ -92,12 +115,12 @@ public class TransactionManager : IManager<Transaction>
         {
             TransactionID = x.Field<int>("TransactionID"),
             //Assuming the web service always return valid data, 'D' will serve as a default value
-            TransactionType = x.Field<string>("TransactionType")?.Single() ?? transactionType,
+            TransactionType = x.Field<string>("TransactionType")?.Single() ?? transactionTypeDeposit,
             AccountNumber = accountNum,
             DestinationAccountNumber = x.Field<int?>("DestinationAccountNumber"),
             Amount = x.Field<decimal>("Amount"),
             Comment = x.Field<string?>("Comment"),
             TransactionTimeUtc = x.Field<DateTime>("TransactionTimeUtc")
-        }).OrderByDescending(x => x.TransactionTimeUtc).ToList();
+        }).ToList();
     }
 }

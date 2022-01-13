@@ -25,7 +25,7 @@ public class Facade
         return null;
     }
 
-    public void Deposit(int accountNumberSelected, int amount, string comment, decimal balance)
+    public void Deposit(int accountNumberSelected, decimal amount, string comment, decimal balance)
     {
         char transactionType = 'D';
         DateTime timeStamp = DateTime.UtcNow;
@@ -40,5 +40,49 @@ public class Facade
         accountManager.UpdateBalance(accountNumberSelected, balance);
         
     }
+
+    public int NumberofTransactions(int accountNum)
+    {
+        var transfer = transactionManager.GetTransferTransactions(accountNum).Count;
+        var withdraw = transactionManager.GetWithdrawTransactions(accountNum).Count;
+        
+        return transfer + withdraw;
+    }
+
+    public void Withdraw(int accountNum, decimal amount, string comment, decimal balance)
+    {
+        char transactionType = 'W';
+        DateTime timeStamp = DateTime.UtcNow;
+        var newTransaction = new Transaction();
+        newTransaction.AccountNumber = accountNum;
+        newTransaction.Amount = amount;
+        newTransaction.TransactionType = transactionType;
+        newTransaction.Comment = comment;
+        newTransaction.TransactionTimeUtc = timeStamp;
+        
+        transactionManager.Add(newTransaction);
+        accountManager.UpdateBalance(accountNum, balance);
+    }
     
+    public void Transfer(int accountNum, decimal amount, string comment, decimal balance)
+    {
+        char transactionType = 'T';
+        DateTime timeStamp = DateTime.UtcNow;
+        var newTransaction = new Transaction();
+        newTransaction.AccountNumber = accountNum;
+        newTransaction.Amount = amount;
+        newTransaction.TransactionType = transactionType;
+        newTransaction.Comment = comment;
+        newTransaction.TransactionTimeUtc = timeStamp;
+        
+        transactionManager.Add(newTransaction);
+        accountManager.UpdateBalance(accountNum, balance);
+    }
+
+    private void TransactionLogic()
+    {
+        
+    }
+    
+
 }
