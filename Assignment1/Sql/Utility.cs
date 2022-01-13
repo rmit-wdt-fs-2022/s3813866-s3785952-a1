@@ -13,5 +13,5 @@ public static class Utility
         adapter.Fill(table);
     
         return table;
-    } 
+    }
 }

@@ -3,6 +3,6 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/Assignment1/Sql/ClearDataBase.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/Assignment1/Sql/CreateTables.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/Assignment1/Sql/DatabaseManager.cs" dialect="GenericSQL" />
+    <file url="PROJECT" dialect="GenericSQL" />
   </component>
 </project>

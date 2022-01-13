@@ -9,7 +9,7 @@ public class LoginMenu
     {
         while (true)
         {
-            var db = new DatabaseManager(connectionString);
+            var loginManager = new LoginManager(connectionString);
             Menu m = new();
 
 
@@ -25,7 +25,7 @@ public class LoginMenu
             var passwordHashMatch = false;
             if (loginIdEightDigitsLong)
             {
-                var details = db.GetLogin(Utilities.ConvertToInt32(loginId));
+                var details = loginManager.GetLogin(Utilities.ConvertToInt32(loginId));
                 passwordHashMatch = Utilities.HashVerification(details.PasswordHash, password);
             }
 
