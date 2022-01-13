@@ -29,9 +29,11 @@ public class Program
             
         //database connection test
         var connectionString = configuration.GetConnectionString("Database");
-        Console.WriteLine(connectionString);
         DatabaseConnection.CreateTables(connectionString);
         WebService.WebService.SaveCustomerInDb(connectionString);
+
+        var facade = new Facade(connectionString);
+        facade.Deposit(4100, 20, "he", 10);
         
         Console.WriteLine("done");
         

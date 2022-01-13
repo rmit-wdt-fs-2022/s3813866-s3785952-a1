@@ -56,7 +56,7 @@ public static class WebService
         Console.WriteLine(loginManager.GetLogin(12345678).PasswordHash);
         Console.WriteLine(transactionManager.GetTransaction(4100).First().AccountNumber);
         Console.WriteLine(transactionManager.GetTransaction(4101).First().TransactionTimeUtc);
-        Console.WriteLine(accountManager.GetAccounts(2100).First().Balance);
+        Console.WriteLine(accountManager.GetAccounts(2100).First().Balance?.ToString("F"));
         
     }
 }

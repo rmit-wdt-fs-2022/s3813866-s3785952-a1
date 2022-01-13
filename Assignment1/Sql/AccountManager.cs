@@ -61,4 +61,37 @@ public class AccountManager : IManager<Account>
             Balance = x.Field<decimal>("Balance")
         }).ToList();
     }
+    
+    public Account GetAccount(int customerId, int accountNum)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT * FROM Account WHERE customerid=customerid && accountnumber == accountnumber";
+        command.Parameters.AddWithValue("CustomerID", customerId);
+
+        var account = command.GetDataTable().Select().Select(x => new Account
+        {
+            AccountNumber = x.Field<int>("AccountNumber"),
+            //Assuming the web service always return valid data, 'T' will serve as a default value
+            AccountType = x.Field<string>("AccountType")?.Single() ?? 'S',
+            CustomerId = customerId,
+            Balance = x.Field<decimal>("Balance")
+        }).ToList();
+        
+        return account.First();
+    }
+
+    public void UpdateBalance(int accountNum, decimal newBalance)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        connection.Open();
+
+        using var command = connection.CreateCommand();
+        command.CommandText =
+            "UPDATE Account SET Balance = @Balance WHERE AccountNumber = @AccountNumber";
+        command.Parameters.AddWithValue("Balance", newBalance);
+        command.Parameters.AddWithValue("AccountNumber", accountNum);
+        
+        command.ExecuteNonQuery();
+    }
 }

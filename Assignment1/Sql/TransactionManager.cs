@@ -53,6 +53,7 @@ public class TransactionManager : IManager<Transaction>
         }).OrderByDescending(x => x.TransactionTimeUtc).ToList();
     }
 
+    //TODO fix this bug
     public List<Transaction> GetNonDepositTransactions(int accountNum)
     {
         using var connection = new SqlConnection(_connectionString);
