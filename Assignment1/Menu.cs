@@ -1,4 +1,5 @@
-﻿using Utillities;
+﻿using Microsoft.Extensions.Configuration;
+using Utillities;
 namespace Main
 {
     public class Menu
@@ -88,7 +89,7 @@ namespace Main
                               "We hope to see you back!");
             Thread.Sleep(5000);
             Console.Clear();
-            lm.LoginMenuDisplay(util.GetConnectionString());
+            lm.LoginMenuDisplay(GetConnectionString());
         }
 
         private void Exit()
@@ -97,6 +98,13 @@ namespace Main
             Console.WriteLine("Thank you for banking with the Most Common Bank of Australia \n" +
                               "We hope to see you back!");
             Environment.Exit(0);
+        }
+        
+        private string GetConnectionString()
+        {
+            var configuration = new ConfigurationBuilder().AddJsonFile("app-settings.json").Build();
+            var connectionString = configuration.GetConnectionString("Database");
+            return connectionString;
         }
     }
 }
