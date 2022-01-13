@@ -33,7 +33,7 @@ public class AccountManager : IManager<Account>
         using var connection = new SqlConnection(_connectionString);
         using var command = connection.CreateCommand();
         command.CommandText = "select * from Account ";
-        
+
 
         return command.GetDataTable().Select().Select(x => new Account
         {
@@ -44,7 +44,7 @@ public class AccountManager : IManager<Account>
             Balance = x.Field<decimal>("Balance")
         }).ToList();
     }
-    
+
     public List<Account> GetAccounts(int customerId)
     {
         using var connection = new SqlConnection(_connectionString);
@@ -61,13 +61,14 @@ public class AccountManager : IManager<Account>
             Balance = x.Field<decimal>("Balance")
         }).ToList();
     }
-    
-    public Account GetAccount(int customerId, int accountNum)
+
+    public Account GetAccount(int customerId, int accountNumber)
     {
         using var connection = new SqlConnection(_connectionString);
         using var command = connection.CreateCommand();
-        command.CommandText = "SELECT * FROM Account WHERE customerid=customerid && accountnumber == accountnumber";
+        command.CommandText = "SELECT * FROM Account WHERE CustomerID = @CustomerID AND AccountNumber = @AccountNumber";
         command.Parameters.AddWithValue("CustomerID", customerId);
+        command.Parameters.AddWithValue("AccountNumber", accountNumber);
 
         var account = command.GetDataTable().Select().Select(x => new Account
         {
@@ -77,7 +78,7 @@ public class AccountManager : IManager<Account>
             CustomerId = customerId,
             Balance = x.Field<decimal>("Balance")
         }).ToList();
-        
+
         return account.First();
     }
 
@@ -91,7 +92,7 @@ public class AccountManager : IManager<Account>
             "UPDATE Account SET Balance = @Balance WHERE AccountNumber = @AccountNumber";
         command.Parameters.AddWithValue("Balance", newBalance);
         command.Parameters.AddWithValue("AccountNumber", accountNum);
-        
+
         command.ExecuteNonQuery();
     }
 }
