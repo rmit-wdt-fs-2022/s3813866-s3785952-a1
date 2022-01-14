@@ -16,7 +16,7 @@ public class Transfer
         var facade = new Facade(connectionString);
         var menu = new Menu();
         var accounts = accountManager.GetAccounts(StoreCustomerDetails.GetInstance()!.GetCustomerId());
-        
+
 
         Console.WriteLine(@"  _______                   __            __  __                  
  |__   __|                 / _|          |  \/  |                 
@@ -72,12 +72,12 @@ public class Transfer
                     Console.WriteLine(
                         $"You have selected account number {convertToIntSelectedAccountNumber} with a balance of ${singleAccount.Balance?.ToString("0.00")} and a available balance of ${(singleAccount.Balance - 300)?.ToString("0.00")}");
 
-                
+
                 Console.Write("Enter the account number you wish to transfer: ");
                 var destinationAccountInput = Console.ReadLine();
                 var destinationAccount = Convert.ToInt32(destinationAccountInput);
 
-                
+
                 if (checkAccount(accountManager.CheckTable(), destinationAccount))
                 {
                     Console.WriteLine($"You have chosen the account: {destinationAccount}");
@@ -86,7 +86,7 @@ public class Transfer
                 {
                     throw new ArgumentException("Invalid account number");
                 }
-                
+
                 Console.Write(
                     "Enter the amount you wish to transfer to, or enter 'c' to cancel and go back to menu : ");
                 var amountToTransfer = Console.ReadLine();
@@ -107,12 +107,6 @@ public class Transfer
                     Console.WriteLine("You cannot withdraw negative numbers");
                     Thread.Sleep(2000);
                     return;
-                }
-
-                if (convertedAmountToTransfer > singleAccount.Balance - 300)
-                {
-                    Console.WriteLine("Amount cannot be greater than available balance");
-                    Thread.Sleep(2000);
                 }
 
                 Console.Write(
@@ -137,20 +131,23 @@ public class Transfer
 
                 var receieverAccountBalance = accountManager.GetAccountByAccNum(destinationAccount);
                 decimal senderBalance = Convert.ToDecimal(singleAccount.Balance) - convertedAmountToTransfer;
-                decimal receiverBalance = Convert.ToDecimal(receieverAccountBalance.Balance) + convertedAmountToTransfer;
-                
-                    
+                decimal receiverBalance =
+                    Convert.ToDecimal(receieverAccountBalance.Balance) + convertedAmountToTransfer;
+
+
                 if (numberOfTransactions < 2)
-                    facade.Transfer(convertToIntSelectedAccountNumber,destinationAccount ,convertedAmountToTransfer, comment,
+                    facade.Transfer(convertToIntSelectedAccountNumber, destinationAccount, convertedAmountToTransfer,
+                        comment,
                         senderBalance, receiverBalance);
                 else
-                    facade.TransferWithFee(convertToIntSelectedAccountNumber, destinationAccount, convertedAmountToTransfer, comment,
-                        senderBalance,receiverBalance ,transferFee);
+                    facade.TransferWithFee(convertToIntSelectedAccountNumber, destinationAccount,
+                        convertedAmountToTransfer, comment,
+                        senderBalance, receiverBalance, transferFee);
 
                 Console.WriteLine(
                     $"We have withdrew ${convertedAmountToTransfer} to account number {convertToIntSelectedAccountNumber} successfully.");
                 Console.WriteLine("Funds should disappear within the account soon.");
-                
+
                 Console.WriteLine(
                     $"Your account balance is now ${senderBalance:0.00}");
                 Thread.Sleep(3000);
@@ -173,7 +170,6 @@ public class Transfer
             Console.Clear();
             TransferMenu();
         }
-        
     }
 
     private bool checkAccount(List<Account> accounts, int destinationAccount)
@@ -185,6 +181,7 @@ public class Transfer
                 return true;
             }
         }
+
         return false;
     }
 }
