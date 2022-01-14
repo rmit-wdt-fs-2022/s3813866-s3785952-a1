@@ -6,8 +6,6 @@ public class Withdraw
 {
     public void WithdrawMenu()
     {
-        // TODO
-
         Console.Clear();
         var connectionString = StoreConnectionString.GetInstance().GetConnectionString();
         var accountManager =
@@ -118,7 +116,7 @@ public class Withdraw
 
                 var numberOfTransactions = facade.NumberOfTransactions(convertToIntSelectedAccountNumber);
 
-                decimal withdrawFee = (decimal)0.05;
+                var withdrawFee = 0.05m;
                 decimal balance = Convert.ToDecimal(singleAccount.Balance) - Convert.ToDecimal(amountToWithdraw);
 
                 if (numberOfTransactions < 2)
@@ -132,7 +130,7 @@ public class Withdraw
                     $"We have withdrew ${convertedAmountToWithdraw} to account number {convertToIntSelectedAccountNumber} successfully.");
                 Console.WriteLine("Funds should disappear within the account soon.");
 
-                
+
                 Console.WriteLine(
                     $"Your account balance is now ${balance:0.00}");
                 Thread.Sleep(3000);
