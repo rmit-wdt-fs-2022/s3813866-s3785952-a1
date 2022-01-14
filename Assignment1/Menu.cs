@@ -1,23 +1,22 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Main.Sql;
+using Microsoft.Extensions.Configuration;
 using Utillities;
 
 namespace Main
 {
     public class Menu
     {
-        private readonly LoginMenu lm = new();
-        private readonly Utilities util = new();
+        public readonly LoginMenu _loginMenu = new();
 
-        public void MainMenu(string name)
+        public void MainMenu(string? name)
         {
             StoreConnectionString.GetInstance()?.SetConnectionString(GetConnectionString());
-
-            var menuChoices = new[] {1, 2, 3, 4, 5, 6};
-            var menuOptions = new[] {"Deposit", "Withdraw", "Transfer", "My Statement", "Logout", "Exit"};
-            Console.Clear();
-            Console.WriteLine($"--- {name} ---");
             while (true)
             {
+                var menuChoices = new[] {1, 2, 3, 4, 5, 6};
+                var menuOptions = new[] {"Deposit", "Withdraw", "Transfer", "My Statement", "Logout", "Exit"};
+                // Console.Clear();
+                Console.WriteLine($"--- {name} ---");
                 for (var i = 0; i < menuChoices.Length; i++) Console.WriteLine($"[{menuChoices[i]}] {menuOptions[i]} ");
                 Console.WriteLine();
                 Console.WriteLine("Enter an option:");
@@ -25,6 +24,7 @@ namespace Main
 
                 if (Utilities.CheckStringIsAnInt(userInput))
                 {
+                    Console.Clear();
                     var chosenOption = Utilities.ConvertToInt32(userInput);
                     MenuOptions(chosenOption, name);
                 }
@@ -38,7 +38,7 @@ namespace Main
             }
         }
 
-        private void MenuOptions(int option, string name)
+        private void MenuOptions(int option, string? name)
         {
             switch (option)
             {
@@ -81,10 +81,14 @@ namespace Main
 
         private void Withdraw()
         {
+            var withdraw = new Withdraw();
+            withdraw.WithdrawMenu();
         }
 
         private void Transfer()
         {
+            var transfer = new Transfer();
+            transfer.TransferMenu();
         }
 
         private void MyStatement()
@@ -100,7 +104,7 @@ namespace Main
                               "We hope to see you back!");
             Thread.Sleep(5000);
             Console.Clear();
-            lm.LoginMenuDisplay(GetConnectionString());
+            _loginMenu.LoginMenuDisplay(GetConnectionString());
         }
 
         private void Exit()

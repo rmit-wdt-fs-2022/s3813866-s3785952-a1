@@ -15,31 +15,47 @@ public class LoginManager : IManager<Login>
         
     public void Add(Login login)
     {
-        using var connection = new SqlConnection(_connectionString);
-        connection.Open();
+        try
+        {
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
 
-        using var command = connection.CreateCommand();
-        command.CommandText =
-            "insert into Login (LoginID, CustomerID, PasswordHash) values (@LoginID, @CustomerID, @PasswordHash)";
-        command.Parameters.AddWithValue("LoginID", login.LoginId);
-        command.Parameters.AddWithValue("CustomerID", login.CustomerId);
-        command.Parameters.AddWithValue("PasswordHash", login.PasswordHash);
+            using var command = connection.CreateCommand();
+            command.CommandText =
+                "insert into Login (LoginID, CustomerID, PasswordHash) values (@LoginID, @CustomerID, @PasswordHash)";
+            command.Parameters.AddWithValue("LoginID", login.LoginId);
+            command.Parameters.AddWithValue("CustomerID", login.CustomerId);
+            command.Parameters.AddWithValue("PasswordHash", login.PasswordHash);
 
-        command.ExecuteNonQuery();
+            command.ExecuteNonQuery();
+        }
+        catch (SqlException e)
+        {
+            Console.WriteLine("Add login unsuccessful");
+        }
     }
 
     public List<Login> CheckTable()
     {
-        using var connection = new SqlConnection(_connectionString);
-        using var command = connection.CreateCommand();
-        command.CommandText = "select * from Login";
-
-        return command.GetDataTable().Select().Select(x => new Login
+        try
         {
-            LoginId = x.Field<string>("LoginID"),
-            CustomerId = x.Field<int>("CustomerID"),
-            PasswordHash = x.Field<string>("PasswordHash")
-        }).ToList();
+            using var connection = new SqlConnection(_connectionString);
+            using var command = connection.CreateCommand();
+            command.CommandText = "select * from Login";
+
+            return command.GetDataTable().Select().Select(x => new Login
+            {
+                LoginId = x.Field<string>("LoginID"),
+                CustomerId = x.Field<int>("CustomerID"),
+                PasswordHash = x.Field<string>("PasswordHash")
+            }).ToList();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Unavailable");
+            return null;
+        }
+        
     }
     
     public Login GetLogin(int loginId)
@@ -61,6 +77,7 @@ public class LoginManager : IManager<Login>
         }
         catch (InvalidOperationException exception)
         {
+            Console.WriteLine("Unavailable");
             return null;
         }
     }

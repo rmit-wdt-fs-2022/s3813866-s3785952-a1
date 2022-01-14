@@ -22,23 +22,43 @@ public class LoginMenu
 
             var loginIdEightDigitsLong = loginId != null && Utilities.IsEightDigits(loginId) && !loginId.Equals(0);
 
-            var passwordHashMatch = false;
-            if (loginIdEightDigitsLong)
+            if (!loginIdEightDigitsLong)
             {
-                var details = loginManager.GetLogin(Utilities.ConvertToInt32(loginId));
-                passwordHashMatch = Utilities.HashVerification(details.PasswordHash, password);
-                StoreCustomerId.GetInstance()?.SetCustomerId(details.CustomerId);
+                Console.Clear();
+                Console.WriteLine("Login Does Not Contain Eight Digits");
+                Thread.Sleep(2000);
+                Console.Clear();
+                LoginMenuDisplay(connectionString);
             }
 
-            var validLoginDetails = passwordHashMatch && loginIdEightDigitsLong;
+            var validLoginDetails = false;
 
-            var cutomerName = customerManager.GetName(StoreCustomerId.GetInstance().GetCustomerId());
+
+            var passwordHashMatch = false;
+            if (loginIdEightDigitsLong)
+                try
+                {
+                    var details = loginManager.GetLogin(Utilities.ConvertToInt32(loginId));
+                    passwordHashMatch = Utilities.HashVerification(details.PasswordHash, password);
+                    StoreCustomerDetails.GetInstance()?.SetCustomerId(details.CustomerId);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Incorrect Login Number Try Again");
+                }
+
+            validLoginDetails = passwordHashMatch && loginIdEightDigitsLong;
+
+            var customerName = customerManager.GetName(StoreCustomerDetails.GetInstance()!.GetCustomerId());
+
+            StoreCustomerDetails.GetInstance()?.SetCustomerName(customerName.Name);
 
 
             switch (validLoginDetails)
             {
                 case true:
-                    m.MainMenu(cutomerName.Name);
+                    m.MainMenu(customerName.Name);
+
                     break;
                 case false:
                     Console.Clear();
