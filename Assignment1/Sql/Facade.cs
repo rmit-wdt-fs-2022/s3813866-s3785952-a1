@@ -4,14 +4,12 @@ namespace Main.Sql;
 
 public class Facade
 {
-
-    private LoginManager loginManager;
+    
     private CustomerManager customerManager;
     private AccountManager accountManager;
     private TransactionManager transactionManager;
     public Facade(string connectionString)
     {
-        loginManager = new LoginManager(connectionString);
         customerManager = new CustomerManager(connectionString);
         accountManager = new AccountManager(connectionString);
         transactionManager = new TransactionManager(connectionString);
@@ -64,7 +62,7 @@ public class Facade
         accountManager.UpdateBalance(accountNum, balance);
     }
     
-    public void Transfer(int accountNum, decimal amount, string comment, decimal balance)
+    public void Transfer(int accountNum, int destinationAccount, decimal amount, string comment, decimal balance)
     {
         char transactionType = 'T';
         DateTime timeStamp = DateTime.UtcNow;
@@ -72,6 +70,7 @@ public class Facade
         newTransaction.AccountNumber = accountNum;
         newTransaction.Amount = amount;
         newTransaction.TransactionType = transactionType;
+        newTransaction.DestinationAccountNumber = destinationAccount;
         newTransaction.Comment = comment;
         newTransaction.TransactionTimeUtc = timeStamp;
         
