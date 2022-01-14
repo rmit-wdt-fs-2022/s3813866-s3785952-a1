@@ -21,9 +21,10 @@ public class Program
         // facade.Transfer(4101,4200,30,"something3",100);
         facade.Transfer(4101,4300,309,"zhong xina",1036);
         facade.Transfer(4101,4200,300,"yi long musk",100);
-        facade.Transfer(4101,4200,300,"sum ting wong",1070);
+        facade.Transfer(4101,4200,300,"sum ting wong",2070);
+        facade.Withdraw(4101, 300, "withdraw", 1000);
 
-        
+
         Console.WriteLine("done");
 
         var p = new Program();

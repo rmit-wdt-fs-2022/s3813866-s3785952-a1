@@ -118,13 +118,13 @@ public class Withdraw
 
                 var numberOfTransactions = facade.NumberOfTransactions(convertToIntSelectedAccountNumber);
 
-                var withdrawFee = 0.05;
+                decimal withdrawFee = (decimal)0.05;
 
                 if (numberOfTransactions < 2)
                     facade.Withdraw(convertToIntSelectedAccountNumber, convertedAmountToWithdraw, comment,
                         Convert.ToDecimal(singleAccount.Balance));
                 else
-                    facade.Withdraw(convertToIntSelectedAccountNumber, convertedAmountToWithdraw, comment,
+                    facade.WithdrawWithFee(convertToIntSelectedAccountNumber, convertedAmountToWithdraw, comment,
                         Convert.ToDecimal(singleAccount.Balance), withdrawFee);
 
                 Console.WriteLine(

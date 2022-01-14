@@ -61,6 +61,30 @@ public class Facade
         transactionManager.Add(newTransaction);
         accountManager.UpdateBalance(accountNum, balance);
     }
+    
+    public void WithdrawWithFee(int accountNum, decimal amount, string? comment, decimal balance, decimal fee)
+    {
+        char withdraw = 'W';
+        char service = 'S';
+        DateTime timeStamp = DateTime.UtcNow;
+        var newTransaction = new Transaction();
+        var serviceTransaction = new Transaction();
+        
+        newTransaction.AccountNumber = accountNum;
+        newTransaction.Amount = amount;
+        newTransaction.TransactionType = withdraw;
+        newTransaction.Comment = comment;
+        newTransaction.TransactionTimeUtc = timeStamp;
+        
+        serviceTransaction.AccountNumber = accountNum;
+        serviceTransaction.Amount = fee;
+        serviceTransaction.TransactionType = service;
+        serviceTransaction.TransactionTimeUtc = timeStamp;
+
+        transactionManager.Add(newTransaction);
+        transactionManager.Add(serviceTransaction);
+        accountManager.UpdateBalance(accountNum, balance);
+    }
 
     public void Transfer(int accountNum, int destinationAccount, decimal amount, string comment, decimal balance)
     {
@@ -77,4 +101,5 @@ public class Facade
         transactionManager.Add(newTransaction);
         accountManager.UpdateBalance(accountNum, balance);
     }
+    
 }
