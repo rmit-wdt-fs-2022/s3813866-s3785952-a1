@@ -47,7 +47,7 @@ public class Facade
         return transfer + withdraw;
     }
 
-    public void Withdraw(int accountNum, decimal amount, string comment, decimal balance)
+    public void Withdraw(int accountNum, decimal amount, string? comment, decimal balance)
     {
         char transactionType = 'W';
         DateTime timeStamp = DateTime.UtcNow;
@@ -77,5 +77,4 @@ public class Facade
         transactionManager.Add(newTransaction);
         accountManager.UpdateBalance(accountNum, balance);
     }
-
 }

@@ -117,11 +117,25 @@ public class Withdraw
                     throw new ArgumentException("You Cannot Enter more than two decimal places");
 
                 var numberOfTransactions = facade.NumberOfTransactions(convertToIntSelectedAccountNumber);
-                var convertedAmountToDeposit = Convert.ToDecimal(amountToWithdraw);
 
-                if (numberOfTransactions > 2)
-                    facade.Withdraw(convertToIntSelectedAccountNumber, convertedAmountToDeposit, comment,
+                var withdrawFee = 0.05;
+
+                if (numberOfTransactions < 2)
+                    facade.Withdraw(convertToIntSelectedAccountNumber, convertedAmountToWithdraw, comment,
                         Convert.ToDecimal(singleAccount.Balance));
+                else
+                    facade.Withdraw(convertToIntSelectedAccountNumber, convertedAmountToWithdraw, comment,
+                        Convert.ToDecimal(singleAccount.Balance), withdrawFee);
+
+                Console.WriteLine(
+                    $"We have withdrew ${convertedAmountToWithdraw} to account number {convertToIntSelectedAccountNumber} successfully.");
+                Console.WriteLine("Funds should disappear within the account soon.");
+
+                var totalBalance = Convert.ToDecimal(singleAccount.Balance);
+                Console.WriteLine(
+                    $"Your account balance is now ${totalBalance:0.00}");
+                Thread.Sleep(3000);
+                Console.Clear();
             }
             catch (Exception e)
             {
