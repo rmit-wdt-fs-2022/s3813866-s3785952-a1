@@ -8,7 +8,7 @@ namespace Main
         private readonly LoginMenu lm = new();
         private readonly Utilities util = new();
 
-        public void MainMenu(string name)
+        public void MainMenu(string? name)
         {
             StoreConnectionString.GetInstance()?.SetConnectionString(GetConnectionString());
 
@@ -38,7 +38,7 @@ namespace Main
             }
         }
 
-        private void MenuOptions(int option, string name)
+        private void MenuOptions(int option, string? name)
         {
             switch (option)
             {
