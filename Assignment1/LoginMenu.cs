@@ -22,6 +22,15 @@ public class LoginMenu
 
             var loginIdEightDigitsLong = loginId != null && Utilities.IsEightDigits(loginId) && !loginId.Equals(0);
 
+            if (!loginIdEightDigitsLong)
+            {
+                Console.Clear();
+                Console.WriteLine("Login Does Not Contain Eight Digits");
+                Thread.Sleep(2000);
+                Console.Clear();
+                LoginMenuDisplay(connectionString);
+            }
+
             var validLoginDetails = false;
 
 

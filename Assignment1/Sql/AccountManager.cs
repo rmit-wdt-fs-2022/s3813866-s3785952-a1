@@ -124,6 +124,34 @@ public class AccountManager : IManager<Account>
             return null;
         }
     }
+    
+    public Account? GetAccountByAccNum(int accountNumber)
+    {
+        try
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = connection.CreateCommand();
+            command.CommandText =
+                "SELECT * FROM Account WHERE AccountNumber = @AccountNumber";
+            command.Parameters.AddWithValue("AccountNumber", accountNumber);
+
+            var account = command.GetDataTable().Select().Select(x => new Account
+            {
+                AccountNumber = x.Field<int>("AccountNumber"),
+                //Assuming the web service always return valid data, 'T' will serve as a default value
+                AccountType = x.Field<string>("AccountType")?.Single() ?? 'S',
+                CustomerId = x.Field<int>("CustomerID"),
+                Balance = x.Field<decimal>("Balance")
+            }).ToList();
+
+            return account.First();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return null;
+        }
+    }
 
     public void UpdateBalance(int accountNum, decimal newBalance)
     {

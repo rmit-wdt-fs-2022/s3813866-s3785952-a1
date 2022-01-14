@@ -16,7 +16,7 @@ public class Transfer
         var facade = new Facade(connectionString);
         var menu = new Menu();
         var accounts = accountManager.GetAccounts(StoreCustomerDetails.GetInstance()!.GetCustomerId());
-        var accountSelected = Console.ReadLine();
+        
 
         Console.WriteLine(@"  _______                   __            __  __                  
  |__   __|                 / _|          |  \/  |                 
@@ -72,6 +72,21 @@ public class Transfer
                     Console.WriteLine(
                         $"You have selected account number {convertToIntSelectedAccountNumber} with a balance of ${singleAccount.Balance?.ToString("0.00")} and a available balance of ${(singleAccount.Balance - 300)?.ToString("0.00")}");
 
+                
+                Console.Write("Enter the account number you wish to transfer: ");
+                var destinationAccountInput = Console.ReadLine();
+                var destinationAccount = Convert.ToInt32(destinationAccountInput);
+
+                
+                if (checkAccount(accountManager.CheckTable(), destinationAccount))
+                {
+                    Console.WriteLine($"You have chosen the account: {destinationAccount}");
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid account number");
+                }
+                
                 Console.Write(
                     "Enter the amount you wish to transfer to, or enter 'c' to cancel and go back to menu : ");
                 var amountToTransfer = Console.ReadLine();
@@ -87,14 +102,14 @@ public class Transfer
                     menu.MainMenu(StoreCustomerDetails.GetInstance()?.GetCustomerName());
                 }
 
-                if (convertedAmountToWithdraw < 0)
+                if (convertedAmountToTransfer < 0)
                 {
                     Console.WriteLine("You cannot withdraw negative numbers");
                     Thread.Sleep(2000);
                     return;
                 }
 
-                if (convertedAmountToWithdraw > singleAccount.Balance - 300)
+                if (convertedAmountToTransfer > singleAccount.Balance - 300)
                 {
                     Console.WriteLine("Amount cannot be greater than available balance");
                     Thread.Sleep(2000);
@@ -113,27 +128,31 @@ public class Transfer
                     menu.MainMenu(StoreCustomerDetails.GetInstance()?.GetCustomerName());
                 }
 
-                if (decimal.Round(convertedAmountToWithdraw, 2) != convertedAmountToWithdraw)
+                if (decimal.Round(convertedAmountToTransfer, 2) != convertedAmountToTransfer)
                     throw new ArgumentException("You Cannot Enter more than two decimal places");
 
                 var numberOfTransactions = facade.NumberOfTransactions(convertToIntSelectedAccountNumber);
 
-                var withdrawFee = 0.05m;
+                var transferFee = 0.10m;
 
+                var receieverAccountBalance = accountManager.GetAccountByAccNum(destinationAccount);
+                decimal senderBalance = Convert.ToDecimal(singleAccount.Balance) - convertedAmountToTransfer;
+                decimal receiverBalance = Convert.ToDecimal(receieverAccountBalance.Balance) + convertedAmountToTransfer;
+                
+                    
                 if (numberOfTransactions < 2)
-                    facade.Withdraw(convertToIntSelectedAccountNumber, convertedAmountToWithdraw, comment,
-                        Convert.ToDecimal(singleAccount.Balance));
+                    facade.Transfer(convertToIntSelectedAccountNumber,destinationAccount ,convertedAmountToTransfer, comment,
+                        senderBalance, receiverBalance);
                 else
-                    facade.WithdrawWithFee(convertToIntSelectedAccountNumber, convertedAmountToWithdraw, comment,
-                        Convert.ToDecimal(singleAccount.Balance), withdrawFee);
+                    facade.TransferWithFee(convertToIntSelectedAccountNumber, destinationAccount, convertedAmountToTransfer, comment,
+                        senderBalance,receiverBalance ,transferFee);
 
                 Console.WriteLine(
-                    $"We have withdrew ${convertedAmountToWithdraw} to account number {convertToIntSelectedAccountNumber} successfully.");
+                    $"We have withdrew ${convertedAmountToTransfer} to account number {convertToIntSelectedAccountNumber} successfully.");
                 Console.WriteLine("Funds should disappear within the account soon.");
-
-                var totalBalance = Convert.ToDecimal(singleAccount.Balance);
+                
                 Console.WriteLine(
-                    $"Your account balance is now ${totalBalance:0.00}");
+                    $"Your account balance is now ${senderBalance:0.00}");
                 Thread.Sleep(3000);
                 Console.Clear();
             }
@@ -154,19 +173,18 @@ public class Transfer
             Console.Clear();
             TransferMenu();
         }
+        
+    }
 
-
-        // first mcheck is to to check if the customer owns the account number
-        // for e.g. like deposit and withdraw SELECT accountNumber from account where customerid = customerid
-
-
-        // this is for transfer
-        // i give you currentaccount, destinationAccount, amount and comment and how many withdraw and and transfers they
-        // have done and you will calculate the db accordingly (like withdraw)
-
-        //hotfix
-        // last method is give me the balance of the current accountnumber i give you
-
-        //
+    private bool checkAccount(List<Account> accounts, int destinationAccount)
+    {
+        foreach (var account in accounts)
+        {
+            if (account.AccountNumber == destinationAccount)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -83,6 +83,8 @@ namespace Main
 
         private void Transfer()
         {
+            var transfer = new Transfer();
+            transfer.TransferMenu();
         }
 
         private void MyStatement()
