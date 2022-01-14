@@ -8,7 +8,7 @@ public class MyStatement
     {
         var accountManager = new AccountManager(StoreConnectionString.GetInstance()?.GetConnectionString());
         var transactionManager = new TransactionManager(StoreConnectionString.GetInstance()?.GetConnectionString());
-        var customerId = StoreCustomerId.GetInstance()!.GetCustomerId();
+        var customerId = StoreCustomerDetails.GetInstance()!.GetCustomerId();
 
         const string statementMenuBanner = @"____ ___ ____ ___ ____ _  _ ____ _  _ ___    _  _ ____ _  _ _  _ 
 [__   |  |__|  |  |___ |\/| |___ |\ |  |     |\/| |___ |\ | |  | 
