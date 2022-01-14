@@ -6,14 +6,15 @@ namespace Main.Sql;
 
 public class CustomerManager : IManager<Customer>
 {
-    public List<Customer> Customers { get; }
     private readonly string _connectionString;
-    
+
     public CustomerManager(string connectionString)
     {
         _connectionString = connectionString;
     }
-    
+
+    public List<Customer> Customers { get; }
+
 
     public void Add(Customer customer)
     {
@@ -53,9 +54,9 @@ public class CustomerManager : IManager<Customer>
         {
             using var connection = new SqlConnection(_connectionString);
             using var command = connection.CreateCommand();
-            command.CommandText = "select from Customer where CustomerID = @CustomerID";
+            command.CommandText = "select * from Customer where CustomerID = @CustomerID";
             command.Parameters.AddWithValue("CustomerID", customerId);
-    
+
             var list = command.GetDataTable().Select().Select(x => new Customer
             {
                 CustomerId = x.Field<int>("CustomerID"),
@@ -63,7 +64,7 @@ public class CustomerManager : IManager<Customer>
                 Address = x.Field<string>("Address"),
                 City = x.Field<string>("City")
             }).ToList();
-    
+
             return list.First();
         }
         catch (InvalidOperationException exception)
@@ -71,7 +72,4 @@ public class CustomerManager : IManager<Customer>
             return null;
         }
     }
-    
-    
-    
 }
