@@ -44,10 +44,13 @@ public class Deposit
 
 
             Console.WriteLine(
-                $"You have selected account number {selectedAccountNumber} with a balance of ${singleAccount.Balance?.ToString("0.00")} and a available balance of ${singleAccount.Balance}");
+                $"You have selected account number {selectedAccountNumber} with a balance of ${singleAccount.Balance?.ToString("0.00")} and a available balance of ${singleAccount.Balance?.ToString("0.00")}");
 
             Console.Write("Enter the amount you wish to deposit: ");
             var amountToDeposit = Convert.ToDouble(Console.ReadLine());
+
+            if (decimal.Round((decimal) amountToDeposit, 2) != (decimal) amountToDeposit)
+                throw new ArgumentException("More than two decimals were entered!");
 
             Console.Write("Enter comment for this deposit (n to quit, max length is 30): ");
             var comment = Console.ReadLine();
@@ -59,16 +62,24 @@ public class Deposit
                 Convert.ToDecimal(singleAccount.Balance?.ToString("0.00")) + (decimal) amountToDeposit);
 
             Console.WriteLine(
-                $"We have deposited ${amountToDeposit} to account number {selectedAccountNumber} successfully.");
+                $"We have deposited ${amountToDeposit.ToString("0.00")} to account number {selectedAccountNumber} successfully.");
             Console.WriteLine("Funds should appear within the account soon.");
+
+            var totalDeposited = Convert.ToDecimal(singleAccount.Balance) +
+                                 Convert.ToDecimal(amountToDeposit);
+
+
             Console.WriteLine(
-                $"Your account balance is now ${Convert.ToDecimal(singleAccount.Balance?.ToString("0.00")) + (decimal) amountToDeposit}");
+                $"Your account balance is now ${totalDeposited.ToString("0.00")}");
+            Thread.Sleep(3000);
+            Console.Clear();
         }
         catch (Exception)
         {
             Console.Clear();
             Console.WriteLine("Please Try Again As You Have Miss Typed A Word");
-            Thread.Sleep(2000);
+            Thread.Sleep(3000);
+            Console.Clear();
             DepositMenu();
         }
     }
