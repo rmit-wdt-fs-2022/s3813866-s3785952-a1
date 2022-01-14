@@ -10,6 +10,7 @@ public class LoginMenu
         while (true)
         {
             var loginManager = new LoginManager(connectionString);
+            var customerManager = new CustomerManager(connectionString);
             Menu m = new();
 
 
@@ -32,11 +33,13 @@ public class LoginMenu
 
             var validLoginDetails = passwordHashMatch && loginIdEightDigitsLong;
 
+            var cutomerName = customerManager.GetName(StoreCustomerId.GetInstance().GetCustomerId());
+
 
             switch (validLoginDetails)
             {
                 case true:
-                    m.MainMenu("NAME TO DO");
+                    m.MainMenu(cutomerName.Name);
                     break;
                 case false:
                     Console.ForegroundColor = ConsoleColor.Red;
