@@ -4,26 +4,27 @@ namespace Main.Sql;
 
 public class Facade
 {
-    
-    private CustomerManager customerManager;
     private AccountManager accountManager;
     private TransactionManager transactionManager;
+
     public Facade(string connectionString)
     {
-        customerManager = new CustomerManager(connectionString);
+        new CustomerManager(connectionString);
         accountManager = new AccountManager(connectionString);
         transactionManager = new TransactionManager(connectionString);
     }
-    public Account GetUserAccounts(int customerID, int accountNum)
+
+    public Account? GetUserAccounts(int customerId, int accountNum)
     {
         if (accountManager.CheckTable().Any())
         {
-            return accountManager.GetAccount(customerID, accountNum);
+            return accountManager.GetAccount(customerId, accountNum);
         }
+
         return null;
     }
 
-    public void Deposit(int accountNumberSelected, decimal amount, string comment, decimal balance)
+    public void Deposit(int accountNumberSelected, decimal amount, string? comment, decimal balance)
     {
         char transactionType = 'D';
         DateTime timeStamp = DateTime.UtcNow;
@@ -33,17 +34,16 @@ public class Facade
         newTransaction.TransactionType = transactionType;
         newTransaction.Comment = comment;
         newTransaction.TransactionTimeUtc = timeStamp;
-        
+
         transactionManager.Add(newTransaction);
         accountManager.UpdateBalance(accountNumberSelected, balance);
-        
     }
 
-    public int NumberofTransactions(int accountNum)
+    public int NumberOfTransactions(int accountNum)
     {
         var transfer = transactionManager.GetTransferTransactions(accountNum).Count;
         var withdraw = transactionManager.GetWithdrawTransactions(accountNum).Count;
-        
+
         return transfer + withdraw;
     }
 
@@ -57,11 +57,11 @@ public class Facade
         newTransaction.TransactionType = transactionType;
         newTransaction.Comment = comment;
         newTransaction.TransactionTimeUtc = timeStamp;
-        
+
         transactionManager.Add(newTransaction);
         accountManager.UpdateBalance(accountNum, balance);
     }
-    
+
     public void Transfer(int accountNum, int destinationAccount, decimal amount, string comment, decimal balance)
     {
         char transactionType = 'T';
@@ -73,15 +73,12 @@ public class Facade
         newTransaction.DestinationAccountNumber = destinationAccount;
         newTransaction.Comment = comment;
         newTransaction.TransactionTimeUtc = timeStamp;
-        
+
         transactionManager.Add(newTransaction);
         accountManager.UpdateBalance(accountNum, balance);
     }
 
     private void TransactionLogic()
     {
-        
     }
-    
-
 }
