@@ -22,15 +22,23 @@ public class LoginMenu
 
             var loginIdEightDigitsLong = loginId != null && Utilities.IsEightDigits(loginId) && !loginId.Equals(0);
 
+            var validLoginDetails = false;
+
+
             var passwordHashMatch = false;
             if (loginIdEightDigitsLong)
-            {
-                var details = loginManager.GetLogin(Utilities.ConvertToInt32(loginId));
-                passwordHashMatch = Utilities.HashVerification(details.PasswordHash, password);
-                StoreCustomerDetails.GetInstance()?.SetCustomerId(details.CustomerId);
-            }
+                try
+                {
+                    var details = loginManager.GetLogin(Utilities.ConvertToInt32(loginId));
+                    passwordHashMatch = Utilities.HashVerification(details.PasswordHash, password);
+                    StoreCustomerDetails.GetInstance()?.SetCustomerId(details.CustomerId);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Incorrect Login Number Try Again");
+                }
 
-            var validLoginDetails = passwordHashMatch && loginIdEightDigitsLong;
+            validLoginDetails = passwordHashMatch && loginIdEightDigitsLong;
 
             var customerName = customerManager.GetName(StoreCustomerDetails.GetInstance()!.GetCustomerId());
 
