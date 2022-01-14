@@ -10,6 +10,7 @@ public class LoginMenu
         while (true)
         {
             var loginManager = new LoginManager(connectionString);
+            var customerManager = new CustomerManager(connectionString);
             Menu m = new();
 
             Console.WriteLine("Welcome to Most Common Bank of Australia (MCBA) \n" +
@@ -26,16 +27,19 @@ public class LoginMenu
             {
                 var details = loginManager.GetLogin(Utilities.ConvertToInt32(loginId));
                 passwordHashMatch = Utilities.HashVerification(details.PasswordHash, password);
-                StoreCustomerId.GetInstance()?.SetCustomerId(details.CustomerId);
+                StoreCustomerDetails.GetInstance()?.SetCustomerId(details.CustomerId);
             }
 
             var validLoginDetails = passwordHashMatch && loginIdEightDigitsLong;
 
+            var customerName = customerManager.GetName(StoreCustomerDetails.GetInstance()!.GetCustomerId());
+
+            StoreCustomerDetails.GetInstance()?.SetCustomerName(customerName.Name);
 
             switch (validLoginDetails)
             {
                 case true:
-                    m.MainMenu("NAME TO DO");
+                    m.MainMenu(customerName.Name);
                     break;
                 case false:
                     Console.Clear();
