@@ -38,13 +38,7 @@ public class Deposit
             Console.WriteLine("\t  $" + account.Balance?.ToString("0.00"));
         }
 
-
-        Console.WriteLine();
-=======
-            Console.WriteLine(
-                $"You have selected account number {selectedAccountNumber} with a balance of ${singleAccount.Balance?.ToString("0.00")} and a available balance of ${singleAccount.Balance?.ToString("0.00")}");
-
-
+        
         Console.Write(
             "Please select the account from the list above you wish to deposit to , or enter 'c' to cancel and go back to menu : ");
         var selectedAccountNumber = Console.ReadLine();
