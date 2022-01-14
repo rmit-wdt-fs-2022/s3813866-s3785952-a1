@@ -33,7 +33,6 @@ public class AccountManager : IManager<Account>
         {
             Console.WriteLine(e.Message);
         }
-        
     }
 
     public List<Account> CheckTable()
@@ -64,7 +63,6 @@ public class AccountManager : IManager<Account>
             Console.WriteLine(e.Message);
             return null;
         }
-        
     }
 
     public List<Account> GetAccounts(int customerId)
@@ -84,7 +82,8 @@ public class AccountManager : IManager<Account>
                 CustomerId = customerId,
                 Balance = x.Field<decimal>("Balance")
             }).ToList();
-        }catch (InvalidOperationException e)
+        }
+        catch (InvalidOperationException e)
         {
             Console.WriteLine(e.Message);
             return null;
@@ -94,10 +93,9 @@ public class AccountManager : IManager<Account>
             Console.WriteLine(e.Message);
             return null;
         }
-        
     }
 
-    public Account GetAccount(int customerId, int accountNumber)
+    public Account? GetAccount(int customerId, int accountNumber)
     {
         try
         {
@@ -145,6 +143,5 @@ public class AccountManager : IManager<Account>
         {
             Console.WriteLine(e.Message);
         }
-        
     }
 }
