@@ -18,19 +18,27 @@ public class CustomerManager : IManager<Customer>
 
     public void Add(Customer customer)
     {
-        using var connection = new SqlConnection(_connectionString);
-        connection.Open();
+        try
+        {
 
-        using var command = connection.CreateCommand();
-        command.CommandText =
-            "insert into Customer (CustomerID, Name, Address, City, Postcode) values (@CustomerID, @Name, @Address, @City, @Postcode)";
-        command.Parameters.AddWithValue("CustomerID", customer.CustomerId);
-        command.Parameters.AddWithValue("Name", customer.Name);
-        command.Parameters.AddWithValue("Address", customer.Address != null ? customer.Address : DBNull.Value);
-        command.Parameters.AddWithValue("City", customer.City != null ? customer.City : DBNull.Value);
-        command.Parameters.AddWithValue("Postcode", customer.PostCode != null ? customer.PostCode : DBNull.Value);
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
 
-        command.ExecuteNonQuery();
+            using var command = connection.CreateCommand();
+            command.CommandText =
+                "insert into Customer (CustomerID, Name, Address, City, Postcode) values (@CustomerID, @Name, @Address, @City, @Postcode)";
+            command.Parameters.AddWithValue("CustomerID", customer.CustomerId);
+            command.Parameters.AddWithValue("Name", customer.Name);
+            command.Parameters.AddWithValue("Address", customer.Address != null ? customer.Address : DBNull.Value);
+            command.Parameters.AddWithValue("City", customer.City != null ? customer.City : DBNull.Value);
+            command.Parameters.AddWithValue("Postcode", customer.PostCode != null ? customer.PostCode : DBNull.Value);
+
+            command.ExecuteNonQuery();
+        }
+        catch (SqlException e)
+        {
+            Console.WriteLine("Add customer unsuccessful,");
+        }
     }
 
     public List<Customer> CheckTable()

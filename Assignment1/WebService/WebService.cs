@@ -14,6 +14,9 @@ public static class WebService
         var accountManager = new AccountManager(connectionString);
         var transactionManager = new TransactionManager(connectionString);
 
+        if (customerManager.CheckTable().Any() || transactionManager.CheckTable().Any())
+            return;
+
         const string Url = "https://coreteaching01.csit.rmit.edu.au/~e103884/wdt/services/customers/";
 
         // Contact webservice.
@@ -53,10 +56,6 @@ public static class WebService
         
         }
         
-        Console.WriteLine(loginManager.GetLogin(12345678).PasswordHash);
-        Console.WriteLine(transactionManager.GetTransaction(4100).First().AccountNumber);
-        Console.WriteLine(transactionManager.GetTransaction(4101).First().TransactionTimeUtc);
-        Console.WriteLine(accountManager.GetAccounts(2100).First().Balance?.ToString("F"));
         
     }
 }

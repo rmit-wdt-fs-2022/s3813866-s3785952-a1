@@ -78,7 +78,4 @@ public class Facade
         accountManager.UpdateBalance(accountNum, balance);
     }
 
-    private void TransactionLogic()
-    {
-    }
 }
