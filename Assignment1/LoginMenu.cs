@@ -53,10 +53,12 @@ public class LoginMenu
 
             StoreCustomerDetails.GetInstance()?.SetCustomerName(customerName.Name);
 
+
             switch (validLoginDetails)
             {
                 case true:
                     m.MainMenu(customerName.Name);
+
                     break;
                 case false:
                     Console.Clear();

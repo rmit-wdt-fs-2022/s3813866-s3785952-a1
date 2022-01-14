@@ -72,6 +72,10 @@ namespace Main
         private void Deposit()
         {
             var dp = new Deposit();
+            Console.Clear();
+            Console.WriteLine("One moment processing your request");
+            Thread.Sleep(2000);
+            Console.Clear();
             dp.DepositMenu();
         }
 

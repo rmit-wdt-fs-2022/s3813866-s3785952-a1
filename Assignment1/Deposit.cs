@@ -38,7 +38,11 @@ public class Deposit
             Console.WriteLine("\t  $" + account.Balance?.ToString("0.00"));
         }
 
+
         Console.WriteLine();
+=======
+            Console.WriteLine(
+                $"You have selected account number {selectedAccountNumber} with a balance of ${singleAccount.Balance?.ToString("0.00")} and a available balance of ${singleAccount.Balance?.ToString("0.00")}");
 
 
         Console.Write(
@@ -122,7 +126,9 @@ public class Deposit
         else
         {
             Console.Clear();
+
             Console.WriteLine("Please Try Again Input Provided Is Not Correct!");
+
             Thread.Sleep(3000);
             Console.Clear();
             DepositMenu();
